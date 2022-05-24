@@ -208,6 +208,7 @@ void cc2Point5DimEditor::update2DDisplayZoom(ccBBox& box)
 }
 
 ccPointCloud* cc2Point5DimEditor::convertGridToCloud(	const std::vector<ccRasterGrid::ExportableFields>& exportedFields,
+														const std::vector<ccRasterGrid::ExportableFields>& exportedSfStatistics,
 														bool interpolateSF,
 														bool interpolateColors,
 														bool resampleInputCloudXY,
@@ -215,6 +216,8 @@ ccPointCloud* cc2Point5DimEditor::convertGridToCloud(	const std::vector<ccRaster
 														ccGenericPointCloud* inputCloud,
 														bool fillEmptyCells,
 														double emptyCellsHeight,
+														double percentileValue,
+														ccProgressDialog* progressDialog/*=nullptr*/,
 														bool exportToOriginalCS) const
 {
 	//projection dimension
@@ -226,6 +229,7 @@ ccPointCloud* cc2Point5DimEditor::convertGridToCloud(	const std::vector<ccRaster
 	assert(box.isValid());
 
 	return m_grid.convertToCloud(	exportedFields,
+									exportedSfStatistics,
 									interpolateSF,
 									interpolateColors,
 									resampleInputCloudXY,
@@ -235,6 +239,8 @@ ccPointCloud* cc2Point5DimEditor::convertGridToCloud(	const std::vector<ccRaster
 									box,
 									fillEmptyCells,
 									emptyCellsHeight,
+									percentileValue,
+									progressDialog,
 									exportToOriginalCS);
 }
 

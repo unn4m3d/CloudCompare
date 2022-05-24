@@ -39,6 +39,7 @@ constexpr char COMMAND_RASTER_PROJ_MIN[]				= "MIN";
 constexpr char COMMAND_RASTER_PROJ_MAX[]				= "MAX";
 constexpr char COMMAND_RASTER_PROJ_AVG[]				= "AVG";
 constexpr char COMMAND_RASTER_PROJ_MED[]				= "MED";
+constexpr char COMMAND_RASTER_PROJ_INVERSE_VAR[]		= "INV_VAR";
 constexpr char COMMAND_RASTER_RESAMPLE[]				= "RESAMPLE";
 
 //2.5D Volume calculation specific commands
@@ -64,6 +65,10 @@ static ccRasterGrid::ProjectionType GetProjectionType(QString option, ccCommandL
 	else if (option == COMMAND_RASTER_PROJ_MED)
 	{
 		return ccRasterGrid::PROJ_MEDIAN_VALUE;
+	}
+	else if (option == COMMAND_RASTER_PROJ_INVERSE_VAR)
+	{
+		return ccRasterGrid::PROJ_INVERSE_VAR_VALUE;
 	}
 	else
 	{
@@ -355,10 +360,11 @@ bool CommandRasterize::process(ccCommandLineInterface &cmd)
 		if (outputCloud || outputMesh)
 		{
 			std::vector<ccRasterGrid::ExportableFields> exportedFields;
+			std::vector<ccRasterGrid::ExportableFields> exportedSfStatistics;
 			try
 			{
 				//we always compute the default 'height' layer
-				exportedFields.push_back(ccRasterGrid::PER_CELL_HEIGHT);
+				exportedFields.push_back(ccRasterGrid::PER_CELL_VALUE);
 			}
 			catch (const std::bad_alloc&)
 			{
@@ -367,6 +373,7 @@ bool CommandRasterize::process(ccCommandLineInterface &cmd)
 
 			ccPointCloud* rasterCloud = grid.convertToCloud(
 			                                exportedFields,
+			                                exportedSfStatistics,
 			                                true,
 			                                true,
 			                                resample,
@@ -376,6 +383,8 @@ bool CommandRasterize::process(ccCommandLineInterface &cmd)
 			                                gridBBox,
 			                                emptyCellFillStrategy == ccRasterGrid::FILL_CUSTOM_HEIGHT,
 			                                customHeight,
+                                            0,
+											nullptr,
 			                                true
 			                                );
 

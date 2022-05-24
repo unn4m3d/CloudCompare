@@ -52,8 +52,10 @@ struct QCC_DB_LIB_API ccRasterCell
 	double avgHeight;
 	//! Median height value
 	double medianHeight;
-	//! Height std.dev.
+	//! Height std.dev.         (Caclulated from measured Std.Dev. in cell)
 	double stdDevHeight;
+	//! Height model std.dev.   (Calculated from input Std.Dev Scalar field)
+	double modelStdDevHeight;
 	//! Min height value
 	PointCoordinateType minHeight;
 	//! Max height value
@@ -116,14 +118,16 @@ struct QCC_DB_LIB_API ccRasterGrid
 	void reset();
 
 	//! Exportable fields
-	enum ExportableFields { PER_CELL_HEIGHT,
+	enum ExportableFields { PER_CELL_VALUE,
 							PER_CELL_COUNT,
-							PER_CELL_MIN_HEIGHT,
-							PER_CELL_MAX_HEIGHT,
-							PER_CELL_AVG_HEIGHT,
-							PER_CELL_HEIGHT_STD_DEV,
-							PER_CELL_HEIGHT_RANGE,
-							PER_CELL_MEDIAN_HEIGHT,
+							PER_CELL_MIN_VALUE,
+							PER_CELL_MAX_VALUE,
+							PER_CELL_AVG_VALUE,
+							PER_CELL_VALUE_STD_DEV,
+							PER_CELL_VALUE_RANGE,
+							PER_CELL_MEDIAN_VALUE,
+							PER_CELL_PERCENTILE_VALUE,
+							PER_CELL_UNIQUE_VALUE,
 							PER_CELL_INVALID,
 	};
 
@@ -132,6 +136,7 @@ struct QCC_DB_LIB_API ccRasterGrid
 
 	//! Converts the grid to a cloud with scalar field(s)
 	ccPointCloud* convertToCloud(	const std::vector<ExportableFields>& exportedFields,
+                                    const std::vector<ExportableFields>& exportedSfStatistics,
 									bool interpolateSF,
 									bool interpolateColors,
 									bool resampleInputCloudXY,
@@ -141,6 +146,8 @@ struct QCC_DB_LIB_API ccRasterGrid
 									const ccBBox& box,
 									bool fillEmptyCells,
 									double emptyCellsHeight,
+									double percentileValue,
+									ccProgressDialog* progressDialog/*=nullptr*/,
 									bool exportToOriginalCS) const;
 
 	//! Types of projection
@@ -148,6 +155,7 @@ struct QCC_DB_LIB_API ccRasterGrid
 							PROJ_AVERAGE_VALUE			= 1,
 							PROJ_MAXIMUM_VALUE			= 2,
 							PROJ_MEDIAN_VALUE			= 3,
+							PROJ_INVERSE_VAR_VALUE		= 4,
 							INVALID_PROJECTION_TYPE		= 255,
 	};
 
@@ -162,7 +170,8 @@ struct QCC_DB_LIB_API ccRasterGrid
 					bool doInterpolateEmptyCells,
 					double maxEdgeLength,
 					ProjectionType sfInterpolation = INVALID_PROJECTION_TYPE,
-					ccProgressDialog* progressDialog = nullptr);
+					ccProgressDialog* progressDialog = nullptr,
+					int zStdDevSfIndex = -1);
 
 	//! Option for handling empty cells
 	enum EmptyCellFillOption {	LEAVE_EMPTY				= 0,
@@ -220,6 +229,11 @@ struct QCC_DB_LIB_API ccRasterGrid
 
 	//! Associated scalar fields
 	std::vector<SF> scalarFields;
+	
+    //! Array of pointers, each coresponding to a point in the cloud
+	//! 'cloud->getPoint(n)' coresponds to 'pointRefList[n]'
+	//! The pointers are used to chain together points, bellonging to the same cell.
+	std::vector<void*> pointRefList;
 
 	//! Number of columns
 	unsigned width;
@@ -240,6 +254,8 @@ struct QCC_DB_LIB_API ccRasterGrid
 	unsigned nonEmptyCellCount;
 	//! Number of VALID cells
 	unsigned validCellCount;
+	//! Max number of points in any cell
+    unsigned maxNbPoints;
 
 	//! Whether the (average) colors are available or not
 	bool hasColors;

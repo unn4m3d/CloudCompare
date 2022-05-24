@@ -72,13 +72,13 @@ public: //raster export
 private:
 
 	//! Exports the grid as a cloud
-	ccPointCloud* generateCloud(bool autoExport = true) const;
+	ccPointCloud* generateCloud(bool autoExport = true);
 
 	//! Exports the grid as a raster
 	void generateRaster() const;
 
 	//! Exports the grid as a mesh
-	void generateMesh() const;
+	void generateMesh();
 
 	//! Exports the (already generated) contour lines
 	void exportContourLines();
@@ -105,6 +105,9 @@ private:
 
 	//! Called when the projection direction changes
 	void projectionDirChanged(int);
+	
+	//! Called when the Std Dev layer changes
+	void stdDevLayerChanged(int);
 
 	//! Called when the projection type changes
 	void projectionTypeChanged(int);
@@ -146,8 +149,13 @@ private: //standard methods
 	unsigned char getProjectionDimension() const override;
 	ccRasterGrid::ProjectionType getTypeOfProjection() const override;
 
+	//! Returns the index of the std. dev. layer (field)
+	int getStdDevLayerIndex() const;
 	//! Returns user defined height for empty cells
 	double getCustomHeightForEmptyCells() const;
+
+    //! Returns user defined percentile value for SF statistics export
+    double getSFStatisticsPercentileValue() const;
 
 	//! Returns strategy for empty cell filling (extended version)
 	ccRasterGrid::EmptyCellFillOption getFillEmptyCellsStrategyExt(	double& emptyCellsHeight,
@@ -156,6 +164,9 @@ private: //standard methods
 
 	//! Returns whether a given field count should be exported as SF (only if a cloud is generated!)
 	bool exportAsSF(ccRasterGrid::ExportableFields field) const;
+	
+    //! Returns whether a given statistical parameter should be exported for all SFs (only if a cloud is generated!)
+	bool exportSFStatistics(ccRasterGrid::ExportableFields field) const;
 
 	//! Returns whether the output cloud should use the original cloud or the grid as 'support'
 	bool resampleOriginalCloud() const;
@@ -182,10 +193,13 @@ protected: //raster grid related stuff
 
 	//! Converts the grid to a cloud with scalar field(s)
 	ccPointCloud* convertGridToCloud(	const std::vector<ccRasterGrid::ExportableFields>& exportedFields,
+										const std::vector<ccRasterGrid::ExportableFields>& exportedSfStatistics,
 										bool interpolateSF,
 										bool interpolateColors,
 										bool copyHillshadeSF,
 										const QString& activeSFName,
+										double percentileValue,
+										ccProgressDialog* progressDialog,
 										bool exportToOriginalCS) const;
 
 private: //members
