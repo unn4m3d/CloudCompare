@@ -5,6 +5,14 @@ v2.13.alpha (???) - (??/??/????)
 ----------------------
 - New command line option:
 	- FLIP_TRI (to flip the order of the triangle vertices of all opened meshes)
+	- SPLIT_XY_Z 
+		- for commands C2C_DIST and C2M_DIST, to split the distance between the z component and the xy plane component
+	- SF_OP_SF
+		- to compute an arithmetic operation between two scalar fields (add, sub, mult, div)
+	- SF_INTERP with option DEST_IS_FIRST
+		- to interpolate a scalar field from one cloud to another cloud (use DEST_IS_FIRST if destination is first)
+	- SF_ADD_CONST
+		- to add a constant scalar field to a cloud
 
 - Improvements:
 	- Rasterize:
@@ -24,6 +32,17 @@ v2.13.alpha (???) - (??/??/????)
 
 	- Edit > Cloud > Paste from clipboard:
 		- the shortcut has been changed to ALT+P (so as to not conflict with the already existing CTRL+P shortcut for the 'Trace polyline' tool)
+		
+	- Graphical Segmentation Tool:
+		- the user can now configure the name suffix for the remaining and segmented cloud 
+
+v2.12.3 (Kyiv) - (13/06/2022)
+----------------------
+
+- Bug fixes:
+	- CloudCompare would still apply the Global Shift even though it was rejected by the user (which is a bad idea ;). But the entity
+		Global Shift would then be (0, 0, 0), resulting in the loss of the original coordinate system.
+	- the scale in the lower-right part of the 3D view could have the wrong length (if the height of the window is larger than its width)
 
 v2.12.2 (Kyiv) - (23/05/2022)
 ----------------------
