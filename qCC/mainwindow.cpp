@@ -3769,6 +3769,7 @@ void MainWindow::doActionRegister()
 					}
 				}
 			}
+			Q_EMIT onRegistrationSuccess(pc, transMat);
 
 			data->prepareDisplayForRefresh_recursive();
 			data->setName(data->getName() + QString(".registered"));
@@ -3837,16 +3838,19 @@ void MainWindow::doAction4pcsRegister()
 														nbMaxCandidates))
 	{
 		//output resulting transformation matrix
+		ccGLMatrix transMat = FromCCLibMatrix<double, float>(transform.R, transform.T);
+		ccPointCloud *newDataCloud = data->isA(CC_TYPES::POINT_CLOUD) ? static_cast<ccPointCloud*>(data)->cloneThis() : ccPointCloud::From(data, data);
+
 		{
-			ccGLMatrix transMat = FromCCLibMatrix<double, float>(transform.R, transform.T);
+			
 			forceConsoleDisplay();
 			ccConsole::Print(tr("[Align] Resulting matrix:"));
 			ccConsole::Print(transMat.toString(12, ' ')); //full precision
 			ccConsole::Print(tr("Hint: copy it (CTRL+C) and apply it - or its inverse - on any entity with the 'Edit > Apply transformation' tool"));
+			
 		}
 
-		ccPointCloud *newDataCloud = data->isA(CC_TYPES::POINT_CLOUD) ? static_cast<ccPointCloud*>(data)->cloneThis() : ccPointCloud::From(data, data);
-
+		
 		if (data->getParent())
 			data->getParent()->addChild(newDataCloud);
 		newDataCloud->setName(data->getName() + QString(".registered"));
@@ -3856,7 +3860,7 @@ void MainWindow::doAction4pcsRegister()
 		newDataCloud->prepareDisplayForRefresh();
 		zoomOn(newDataCloud);
 		addToDB(newDataCloud);
-
+		Q_EMIT onRegistrationSuccess(newDataCloud, transMat);
 		data->setEnabled(false);
 		data->prepareDisplayForRefresh_recursive();
 	}

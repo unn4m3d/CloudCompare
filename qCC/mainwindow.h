@@ -74,8 +74,10 @@ protected:
 
 	//! Default desctructor
 	~MainWindow() override;
+
 	
 public:
+	Q_SIGNAL void onRegistrationSuccess(const ccGenericPointCloud*, const ccGLMatrix&);	
 	//! Returns the unique instance of this object
 	static MainWindow* TheInstance();
 
