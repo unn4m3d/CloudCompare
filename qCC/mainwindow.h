@@ -170,6 +170,11 @@ public:
 
 	//! Updates the 'Properties' view
 	void updatePropertiesView();
+
+	ccAdvancedAPI* getAdvancedAPI() override
+	{
+		return &m_advancedAPI;
+	}
 	
 private:
 	//! Creates a new 3D GL sub-window
@@ -632,6 +637,8 @@ private: //members
 	/*** plugins ***/
 	//! Manages plugins - menus, toolbars, and the about dialog
 	ccPluginUIManager	*m_pluginUIManager;
+
+	ccAdvancedAPI m_advancedAPI;
 };
 
 #endif

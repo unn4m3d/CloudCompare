@@ -202,6 +202,7 @@ MainWindow::MainWindow()
 	, m_plpDlg(nullptr)
 	, m_pprDlg(nullptr)
 	, m_pfDlg(nullptr)
+	, m_advancedAPI(this)
 {
 	m_UI->setupUi( this );
 
@@ -383,6 +384,8 @@ void MainWindow::initPlugins( )
 
 	m_UI->menuToolbars->addAction( m_pluginUIManager->actionShowMainPluginToolbar() );
 	m_UI->menuToolbars->addAction( m_pluginUIManager->actionShowGLFilterToolbar() );
+
+	m_advancedAPI.initialize();
 }
 
 void MainWindow::doEnableQtWarnings(bool state)

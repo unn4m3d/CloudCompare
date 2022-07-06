@@ -27,6 +27,8 @@
 //qCC_gl
 #include <ccGLUtils.h>
 
+#include <ccAdvancedAPI.h>
+
 class QMainWindow;
 class QWidget;
 class ccGLWindow;
@@ -214,6 +216,11 @@ public:
 
 	virtual void increasePointSize() = 0;
 	virtual void decreasePointSize() = 0;
+
+	virtual ccAdvancedAPI* getAdvancedAPI()
+	{
+		return nullptr;
+	}
 };
 
 #endif //CC_MAIN_APP_INTERFACE_HEADER

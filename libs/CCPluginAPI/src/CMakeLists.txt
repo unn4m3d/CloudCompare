@@ -8,4 +8,5 @@ target_sources( ${PROJECT_NAME}
 		${CMAKE_CURRENT_LIST_DIR}/ccOverlayDialog.cpp
 		${CMAKE_CURRENT_LIST_DIR}/ccPickingHub.cpp
 		${CMAKE_CURRENT_LIST_DIR}/ccRenderToFileDlg.cpp
+		${CMAKE_CURRENT_LIST_DIR}/ccAdvancedAPI.cpp
 )
