@@ -514,4 +514,6 @@ inline void ConvertToGroup(const ccHObject::Container& origin, ccHObject& dest, 
 	}
 }
 
+Q_DECLARE_METATYPE(std::vector<ccHObject*>);
+
 #endif //CC_HIERARCHY_OBJECT_HEADER

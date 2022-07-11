@@ -639,6 +639,8 @@ private: //members
 	ccPluginUIManager	*m_pluginUIManager;
 
 	ccAdvancedAPI m_advancedAPI;
+
+	friend class ccAdvancedAPI;
 };
 
 #endif

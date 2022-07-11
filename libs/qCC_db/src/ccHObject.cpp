@@ -1287,3 +1287,6 @@ void ccHObject::popDisplayState(bool apply/*=true*/)
 		m_displayStateStack.pop_back();
 	}
 }
+
+
+static int id = qRegisterMetaType<std::vector<ccHObject*>>();

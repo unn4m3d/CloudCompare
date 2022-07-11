@@ -1,6 +1,7 @@
 #pragma once
 #include "CCPluginAPI.h"
 #include <QObject>
+#include <QVariant>
 
 class CCPLUGIN_LIB_API ccAdvancedAPI : public QObject
 {
@@ -11,14 +12,25 @@ public:
     void initialize();
     virtual ~ccAdvancedAPI();
 
-    void triggerActionCompleted(QString id, const QObject* results);
+    void triggerActionCompleted(QString id, QVariant results);
+    void triggerActionFailed(QString id, QString reason);
+    void triggerActionCanceled(QString id);
 
-public signals:
+Q_SIGNALS:
     void initialized();
-    void actionCompleted(QString id, const QObject* results);
 
-public slots:
-    void launchAction(QString id, const QObject* settings);
+    void actionCompleted(QString id, QVariant results);
+    void actionFailed(QString id, QString reason);
+    void actionCanceled(QString id);
+
+    void doActionRegister();
+    void doAction4pcsRegister();
+    void doActionSubsample();
+    void doActionSORFilter();
+    void doActionCloudMeshDist();
+
+public Q_SLOTS:
+    void launchAction(QString id, QVariant settings);
     
     
 };

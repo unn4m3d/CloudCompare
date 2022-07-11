@@ -385,6 +385,12 @@ void MainWindow::initPlugins( )
 	m_UI->menuToolbars->addAction( m_pluginUIManager->actionShowMainPluginToolbar() );
 	m_UI->menuToolbars->addAction( m_pluginUIManager->actionShowGLFilterToolbar() );
 
+	connect(&m_advancedAPI, &ccAdvancedAPI::doActionRegister, this, &MainWindow::doActionRegister);
+	connect(&m_advancedAPI, &ccAdvancedAPI::doAction4pcsRegister, this, &MainWindow::doAction4pcsRegister);
+	connect(&m_advancedAPI, &ccAdvancedAPI::doActionSubsample, this, &MainWindow::doActionSubsample);
+	connect(&m_advancedAPI, &ccAdvancedAPI::doActionSORFilter, this, &MainWindow::doActionSORFilter);
+	connect(&m_advancedAPI, &ccAdvancedAPI::doActionCloudMeshDist, this, &MainWindow::doActionCloudMeshDist);
+
 	m_advancedAPI.initialize();
 }
 
@@ -3573,6 +3579,7 @@ void MainWindow::doActionRegister()
 		||	(!m_selectedEntities[1]->isKindOf(CC_TYPES::POINT_CLOUD) && !m_selectedEntities[1]->isKindOf(CC_TYPES::MESH)) )
 	{
 		ccConsole::Error(tr("Select 2 point clouds or meshes!"));
+		m_advancedAPI.triggerActionFailed("Register", "Select 2 point clouds or meshes!");
 		return;
 	}
 
@@ -3586,8 +3593,10 @@ void MainWindow::doActionRegister()
 
 	ccRegistrationDlg rDlg(data, model, this);
 	if (!rDlg.exec())
+	{
+		m_advancedAPI.triggerActionCanceled("Register");
 		return;
-
+	}
 	//model and data order may have changed!
 	model = rDlg.getModelEntity();
 	data = rDlg.getDataEntity();
@@ -3596,6 +3605,7 @@ void MainWindow::doActionRegister()
 	if (std::isnan(minRMSDecrease))
 	{
 		ccLog::Error(tr("Invalid minimum RMS decrease value"));
+		m_advancedAPI.triggerActionFailed("Register", "Invalid minimum RMS decrease value");
 		return;
 	}
 	if (minRMSDecrease < ccRegistrationDlg::GetAbsoluteMinRMSDecrease())
@@ -3716,6 +3726,7 @@ void MainWindow::doActionRegister()
 					{
 						//FIXME TODO
 						ccLog::Error(tr("Doesn't work on sub-meshes yet!"));
+						m_advancedAPI.triggerActionFailed("Register", "Sub-meshes are not supported");
 					}
 
 					if (newMesh)
@@ -3728,7 +3739,12 @@ void MainWindow::doActionRegister()
 					else
 					{
 						ccLog::Error(tr("Failed to clone 'data' mesh! (not enough memory?)"));
+						m_advancedAPI.triggerActionFailed("Register", "Failed to clone data mesh");
 					}
+				}
+				else
+				{
+					m_advancedAPI.triggerActionCanceled("Register");
 				}
 			}
 		}
@@ -3770,15 +3786,20 @@ void MainWindow::doActionRegister()
 			}
 			Q_EMIT onRegistrationSuccess(pc, transMat);
 
+			
+
 			data->prepareDisplayForRefresh_recursive();
 			data->setName(data->getName() + QString(".registered"));
 			zoomOn(data);
+			m_advancedAPI.triggerActionCompleted("Register", QVariant::fromValue(pc->getGLTransformationHistory()));
 		}
 
 		//pop-up summary
 		QMessageBox::information(this, tr("Registration info"), summary.join("\n"));
 		forceConsoleDisplay();
 	}
+
+	m_advancedAPI.triggerActionFailed("Register", "Registration failed");
 
 	refreshAll();
 	updateUI();
@@ -3796,6 +3817,7 @@ void MainWindow::doAction4pcsRegister()
 	if (m_selectedEntities.size() != 2)
 	{
 		ccConsole::Error(tr("Select 2 point clouds!"));
+		m_advancedAPI.triggerActionFailed("4pcsRegister", "Select 2 PCDs!");
 		return;
 	}
 
@@ -3803,6 +3825,7 @@ void MainWindow::doAction4pcsRegister()
 		!m_selectedEntities[1]->isKindOf(CC_TYPES::POINT_CLOUD))
 	{
 		ccConsole::Error(tr("Select 2 point clouds!"));
+		m_advancedAPI.triggerActionFailed("4pcsRegister", "Select 2 PCDs!");
 		return;
 	}
 
@@ -3811,8 +3834,10 @@ void MainWindow::doAction4pcsRegister()
 
 	ccAlignDlg aDlg(model, data);
 	if (!aDlg.exec())
+	{
+		m_advancedAPI.triggerActionCanceled("4pcsRegister");
 		return;
-
+	}
 	// model = aDlg.getModelObject();
 	data = aDlg.getDataObject();
 
@@ -3860,12 +3885,14 @@ void MainWindow::doAction4pcsRegister()
 		zoomOn(newDataCloud);
 		addToDB(newDataCloud);
 		Q_EMIT onRegistrationSuccess(newDataCloud, transMat);
+		m_advancedAPI.triggerActionCompleted("4pcsRegister", QVariant::fromValue(newDataCloud->getGLTransformationHistory()));
 		data->setEnabled(false);
 		data->prepareDisplayForRefresh_recursive();
 	}
 	else
 	{
 		ccConsole::Warning(tr("[Align] Registration failed!"));
+		m_advancedAPI.triggerActionFailed("4pcsRegister", "Registration failed");
 	}
 
 	if (subModel)
@@ -3912,6 +3939,7 @@ void MainWindow::doActionSubsample()
 	if (clouds.empty())
 	{
 		ccConsole::Error(tr("Select at least one point cloud!"));
+		m_advancedAPI.triggerActionFailed("Subsample", "Select at least one point cloud!");
 		return;
 	}
 
@@ -3921,8 +3949,10 @@ void MainWindow::doActionSubsample()
 	if (hasValidSF)
 		sDlg.enableSFModulation(sfMin,sfMax);
 	if (!sDlg.exec())
+	{
+		m_advancedAPI.triggerActionCanceled("Subsample");
 		return;
-
+	}
 	//process clouds
 	ccHObject::Container resultingClouds;
 	{
@@ -3976,6 +4006,7 @@ void MainWindow::doActionSubsample()
 			else
 			{
 				ccLog::Error(tr("Not enough memory!"));
+				m_advancedAPI.triggerActionFailed("Subsample", "Not enough memory");
 				break;
 			}
 		}
@@ -3985,11 +4016,14 @@ void MainWindow::doActionSubsample()
 		if (errors)
 		{
 			ccLog::Error(tr("Errors occurred (see console)"));
+			m_advancedAPI.triggerActionFailed("Subsample", "Errors occured (see console)");
 		}
 	}
 
 	if (m_ccRoot)
 		m_ccRoot->selectEntities(resultingClouds);
+
+	m_advancedAPI.triggerActionCompleted("Subsample", QVariant::fromValue(resultingClouds));
 
 	refreshAll();
 	updateUI();
@@ -5430,8 +5464,10 @@ void MainWindow::doActionSORFilter()
 	sorDlg.setKNN(s_sorFilterKnn);
 	sorDlg.setNSigma(s_sorFilterNSigma);
 	if (!sorDlg.exec())
+	{
+		m_advancedAPI.triggerActionCanceled("SOR Filter");
 		return;
-
+	}
 	//update semi-persistent/dynamic parameters
 	s_sorFilterKnn = sorDlg.KNN();
 	s_sorFilterNSigma = sorDlg.nSigma();
@@ -5508,6 +5544,8 @@ void MainWindow::doActionSORFilter()
 			}
 		}
 	}
+
+	m_advancedAPI.triggerActionCompleted("SORFilter", QVariant::fromValue(selectedEntities));
 
 	refreshAll();
 	updateUI();
@@ -8839,6 +8877,7 @@ void MainWindow::doActionCloudMeshDist()
 	if (getSelectedEntities().size() != 2)
 	{
 		ccConsole::Error(tr("Select 2 entities!"));
+		m_advancedAPI.triggerActionFailed("CloudMeshDist", "Select 2 entities!");
 		return;
 	}
 
@@ -8861,11 +8900,13 @@ void MainWindow::doActionCloudMeshDist()
 	if (meshNum == 0)
 	{
 		ccConsole::Error(tr("Select at least one mesh!"));
+		m_advancedAPI.triggerActionFailed("CloudMeshDist", "Select at least one mesh!");
 		return;
 	}
 	else if (meshNum+cloudNum < 2)
 	{
 		ccConsole::Error(tr("Select one mesh and one cloud or two meshes!"));
+		m_advancedAPI.triggerActionFailed("CloudMeshDist", "Select one mesh and one cloud or two meshes!");
 		return;
 	}
 
@@ -8883,8 +8924,10 @@ void MainWindow::doActionCloudMeshDist()
 								m_selectedEntities[1], tr("Reference"),
 								this );
 		if (!dlg.exec())
+		{
+			m_advancedAPI.triggerActionCanceled("CloudMeshDist");
 			return;
-
+		}
 		compEnt = dlg.getFirstEntity();
 		refMesh = ccHObjectCaster::ToGenericMesh(dlg.getSecondEntity());
 	}
@@ -8898,11 +8941,14 @@ void MainWindow::doActionCloudMeshDist()
 		ccConsole::Error(tr("Failed to initialize comparison dialog"));
 		delete m_compDlg;
 		m_compDlg = nullptr;
+		m_advancedAPI.triggerActionFailed("CloudMeshDist", "Failed to initialize comparison dialog");
 		return;
 	}
 
 	connect(m_compDlg, &QDialog::finished, this, &MainWindow::deactivateComparisonMode);
 	m_compDlg->show();
+
+	m_advancedAPI.triggerActionCompleted("CloudMeshDist", QVariant());
 
 	freezeUI(true);
 }

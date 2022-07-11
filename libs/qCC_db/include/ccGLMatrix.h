@@ -159,4 +159,6 @@ template <typename Tin, typename Tout> ccGLMatrixTpl<Tout> FromCCLibMatrix(const
 	return outputMat;
 }
 
+Q_DECLARE_METATYPE(ccGLMatrix);
+
 #endif //CC_GL_MATRIX_HEADER
