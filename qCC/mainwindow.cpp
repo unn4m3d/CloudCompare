@@ -9735,6 +9735,7 @@ void MainWindow::addToDB(	ccHObject* obj,
 			updateZoom = true;
 		}
 		m_ccRoot->addElement(obj, autoExpandDBTree);
+		Q_EMIT m_advancedAPI.addedToDB(obj);
 	}
 	else
 	{
