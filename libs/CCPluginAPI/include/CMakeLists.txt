@@ -15,6 +15,7 @@ target_sources( ${PROJECT_NAME}
 		${CMAKE_CURRENT_LIST_DIR}/ccRenderToFileDlg.h
 		${CMAKE_CURRENT_LIST_DIR}/ccAdvancedAPI.h
 		${CMAKE_CURRENT_LIST_DIR}/ccScopeGuard.h
+		${CMAKE_CURRENT_LIST_DIR}/ccAdvancedAPISigDecl.h
 )
 
 target_include_directories( ${PROJECT_NAME}

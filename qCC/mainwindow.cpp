@@ -389,11 +389,7 @@ void MainWindow::initPlugins( )
 	m_UI->menuToolbars->addAction( m_pluginUIManager->actionShowMainPluginToolbar() );
 	m_UI->menuToolbars->addAction( m_pluginUIManager->actionShowGLFilterToolbar() );
 
-	connect(&m_advancedAPI, &ccAdvancedAPI::doActionRegister, this, &MainWindow::doActionRegister);
-	connect(&m_advancedAPI, &ccAdvancedAPI::doAction4pcsRegister, this, &MainWindow::doAction4pcsRegister);
-	connect(&m_advancedAPI, &ccAdvancedAPI::doActionSubsample, this, &MainWindow::doActionSubsample);
-	connect(&m_advancedAPI, &ccAdvancedAPI::doActionSORFilter, this, &MainWindow::doActionSORFilter);
-	connect(&m_advancedAPI, &ccAdvancedAPI::doActionCloudMeshDist, this, &MainWindow::doActionCloudMeshDist);
+	#include "advapi_impl/advapi_connect.h"
 
 	m_advancedAPI.initialize();
 }

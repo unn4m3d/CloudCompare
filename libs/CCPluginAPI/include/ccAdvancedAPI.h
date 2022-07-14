@@ -2,10 +2,11 @@
 #include "CCPluginAPI.h"
 #include <QObject>
 #include <QVariant>
+#include "ccAdvancedAPISigDecl.h"
 
 class ccHObject;
 
-class CCPLUGIN_LIB_API ccAdvancedAPI : public QObject
+class CCPLUGIN_LIB_API ccAdvancedAPI : public ccAdvancedAPISigDecl
 {
     Q_OBJECT
 public:
@@ -27,17 +28,13 @@ Q_SIGNALS:
     
     void addedToDB(ccHObject*);
 
-    void doActionRegister();
-    void doAction4pcsRegister();
-    void doActionSubsample();
-    void doActionSORFilter();
-    void doActionCloudMeshDist();
-    
     void actionTriggered(QString);
     void actionFinished(QString);
 
 public Q_SLOTS:
     void launchAction(QString id, QVariant settings);
+
+    void notImplemented(QString id);
     
     
 };

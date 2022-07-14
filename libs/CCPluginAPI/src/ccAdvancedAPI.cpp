@@ -1,7 +1,7 @@
 #include <ccAdvancedAPI.h>
 
 ccAdvancedAPI::ccAdvancedAPI(QObject* parent) :
-    QObject(parent)
+    ccAdvancedAPISigDecl(parent)
     {}
 
 void ccAdvancedAPI::initialize()
@@ -24,21 +24,17 @@ void ccAdvancedAPI::triggerActionCanceled(QString id)
     Q_EMIT actionCanceled(id);
 }
 
-void ccAdvancedAPI::launchAction(QString id, QVariant settings)
+void ccAdvancedAPI::launchAction(QString action, QVariant settings)
 {
-    if(id == "Register")
-        Q_EMIT doActionRegister();
-    else if(id == "4pcsRegister")
-        Q_EMIT doAction4pcsRegister();
-    else if(id == "Subsample")
-        Q_EMIT doActionSubsample();
-    else if(id == "SORFilter")
-        Q_EMIT doActionSORFilter();
-    else if(id == "CloudMeshDist")
-        Q_EMIT doActionCloudMeshDist();
-    else
-        Q_EMIT actionFailed(id, "Action is missing or not implemented");
+    #include "advapi_impl/advapi_switch.h"
+    
+    Q_EMIT notImplemented(action);
 }
 
 ccAdvancedAPI::~ccAdvancedAPI()
 {}
+
+void ccAdvancedAPI::notImplemented(QString id)
+{
+    Q_EMIT actionFailed(id, "Action is missing or not implemented");
+}
