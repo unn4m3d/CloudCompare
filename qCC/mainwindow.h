@@ -175,6 +175,8 @@ public:
 	{
 		return &m_advancedAPI;
 	}
+
+	ccHObject* getRoot() override;
 	
 private:
 	//! Creates a new 3D GL sub-window

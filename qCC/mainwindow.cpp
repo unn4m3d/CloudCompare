@@ -9815,6 +9815,8 @@ void MainWindow::addToDB(	const QStringList& filenames,
 							QString fileFilter/*=QString()*/,
 							ccGLWindow* destWin/*=nullptr*/)
 {
+
+	dispToConsole(QString("addToDB()"));
 	//to use the same 'global shift' for multiple files
 	CCVector3d loadCoordinatesShift(0, 0, 0);
 	bool loadCoordinatesTransEnabled = false;
@@ -11186,4 +11188,9 @@ void MainWindow::doActionComparePlanes()
 	//pop-up summary
 	QMessageBox::information(this, tr("Plane comparison"), info.join("\n"));
 	forceConsoleDisplay();
+}
+
+ccHObject* MainWindow::getRoot()
+{
+	return m_ccRoot->getRootEntity();
 }

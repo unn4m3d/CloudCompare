@@ -217,10 +217,9 @@ public:
 	virtual void increasePointSize() = 0;
 	virtual void decreasePointSize() = 0;
 
-	virtual ccAdvancedAPI* getAdvancedAPI()
-	{
-		return nullptr;
-	}
+	virtual ccAdvancedAPI* getAdvancedAPI() = 0;
+
+	virtual ccHObject* getRoot() = 0;
 };
 
 #endif //CC_MAIN_APP_INTERFACE_HEADER
