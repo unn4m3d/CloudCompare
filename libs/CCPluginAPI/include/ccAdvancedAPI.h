@@ -32,6 +32,9 @@ Q_SIGNALS:
     void doActionSubsample();
     void doActionSORFilter();
     void doActionCloudMeshDist();
+    
+    void actionTriggered(QString);
+    void actionFinished(QString);
 
 public Q_SLOTS:
     void launchAction(QString id, QVariant settings);

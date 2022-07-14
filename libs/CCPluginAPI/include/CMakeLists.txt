@@ -14,6 +14,7 @@ target_sources( ${PROJECT_NAME}
 		${CMAKE_CURRENT_LIST_DIR}/ccQtHelpers.h
 		${CMAKE_CURRENT_LIST_DIR}/ccRenderToFileDlg.h
 		${CMAKE_CURRENT_LIST_DIR}/ccAdvancedAPI.h
+		${CMAKE_CURRENT_LIST_DIR}/ccScopeGuard.h
 )
 
 target_include_directories( ${PROJECT_NAME}
