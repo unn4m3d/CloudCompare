@@ -11310,7 +11310,7 @@ void MainWindow::doActionComparePlanes()
 	forceConsoleDisplay();
 }
 
-ccHObject* MainWindow::getRoot()
+void MainWindow::select(const std::unordered_set<int>& indices)
 {
-	return m_ccRoot->getRootEntity();
+	m_ccRoot->selectEntities(indices);
 }

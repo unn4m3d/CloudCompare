@@ -176,7 +176,7 @@ public:
 		return &m_advancedAPI;
 	}
 
-	ccHObject* getRoot() override;
+	void select(const std::unordered_set<int>&) override;
 	
 private:
 	//! Creates a new 3D GL sub-window

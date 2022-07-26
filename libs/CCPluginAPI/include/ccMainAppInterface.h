@@ -29,6 +29,8 @@
 
 #include <ccAdvancedAPI.h>
 
+#include <unordered_set>
+
 class QMainWindow;
 class QWidget;
 class ccGLWindow;
@@ -219,7 +221,7 @@ public:
 
 	virtual ccAdvancedAPI* getAdvancedAPI() = 0;
 
-	virtual ccHObject* getRoot() = 0;
+	virtual void select(const std::unordered_set<int>& indices) = 0;
 };
 
 #endif //CC_MAIN_APP_INTERFACE_HEADER
