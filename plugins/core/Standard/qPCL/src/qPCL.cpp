@@ -91,6 +91,7 @@ int qPCL::addFilter(BaseFilter* filter)
 {
 	assert(filter);
 	filter->setMainAppInterface(m_app);
+	filter->setIID(IID());
 
 	QAction* action = filter->getAction();
 	if (!action)

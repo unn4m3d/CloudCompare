@@ -21,6 +21,9 @@
 #include <ccPointCloud.h>
 #include <ccHObjectCaster.h>
 
+//CCPluginAPI
+#include <ccScopeGuard.h>
+
 //CCCoreLib
 #include <CCPlatform.h>
 
@@ -82,6 +85,12 @@ void BaseFilter::updateSelectedEntities(const ccHObject::Container& selectedEnti
 
 void BaseFilter::performAction()
 {
+	auto* advapi = getMainAppInterface()->getAdvancedAPI();
+	auto action_id = QString("%1/%2").arg(m_iid).arg(m_desc.entryName);
+
+	Q_EMIT advapi->actionTriggered(action_id);
+	ccScopeGuard exg([&](){ Q_EMIT advapi->actionFinished(action_id); });
+
 	//check if selected entities are good
 	if (!checkSelected())
 	{
@@ -249,4 +258,9 @@ void BaseFilter::getSelectedEntitiesThatAre(CC_CLASS_ENUM kind, ccHObject::Conta
 		}
 	}
 	entities.shrink_to_fit();
+}
+
+void BaseFilter::setIID(const QString& s)
+{
+	m_iid = s;
 }

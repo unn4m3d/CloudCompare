@@ -50,10 +50,11 @@ public:
 	
 protected:
 	ccDefaultPluginInterface( const QString &resourcePath = QString() );
+	const QString& IID() const override;
 	
 private:
 	void setIID( const QString& iid ) override;
-	const QString& IID() const override;
+	
 		
 	ccDefaultPluginData	*m_data;
 };

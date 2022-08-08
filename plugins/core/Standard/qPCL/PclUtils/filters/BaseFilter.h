@@ -122,6 +122,8 @@ public:
 	//! Returns associated CC application interface for accessing to some of mainWindow methods
 	ccMainAppInterface* getMainAppInterface() { return m_app; }
 
+	void setIID(const QString&);
+
 public: //default error codes (reserved between -10 and 1)
 
 	static constexpr int Success = 1;				//!< Filter successful
@@ -198,4 +200,6 @@ protected: //variables
 
 	//! Do we want to show a progress bar while the filter is being applied
 	bool m_showProgress;
+
+	QString m_iid;
 };
