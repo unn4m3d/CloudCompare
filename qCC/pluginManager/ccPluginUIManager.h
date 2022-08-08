@@ -31,6 +31,7 @@ class QWidget;
 class ccMainAppInterface;
 class ccPluginInterface;
 class ccStdPluginInterface;
+class ccAdvancedAPI;
 
 //! Plugin UI manager
 class ccPluginUIManager : public QObject
@@ -88,6 +89,8 @@ private:
 	
 	QToolBar *m_glFiltersToolbar;
 	QAction	*m_showGLFilterToolbar;
+
+	friend class MainWindow;
 };
 
 #endif

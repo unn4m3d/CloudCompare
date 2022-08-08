@@ -37,6 +37,7 @@ class ccGLWindow;
 class ccColorScalesManager;
 class ccOverlayDialog;
 class ccPickingHub;
+class ccPluginInterface;
 
 //! Main application interface (for plugins)
 class ccMainAppInterface
@@ -220,6 +221,7 @@ public:
 	virtual void decreasePointSize() = 0;
 
 	virtual ccAdvancedAPI* getAdvancedAPI() = 0;
+	virtual ccPluginInterface* getPluginByIID(const QString& iid) = 0;
 
 	virtual void select(const std::unordered_set<int>& indices) = 0;
 };

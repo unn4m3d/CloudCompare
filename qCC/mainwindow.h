@@ -177,6 +177,7 @@ public:
 	}
 
 	void select(const std::unordered_set<int>&) override;
+	ccPluginInterface* getPluginByIID(const QString& iid) override;
 	
 private:
 	//! Creates a new 3D GL sub-window

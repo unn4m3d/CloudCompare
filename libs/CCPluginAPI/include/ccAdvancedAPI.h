@@ -5,6 +5,8 @@
 #include "ccAdvancedAPISigDecl.h"
 
 class ccHObject;
+class ccPluginUIManager;
+class ccPluginInterface;
 
 class CCPLUGIN_LIB_API ccAdvancedAPI : public ccAdvancedAPISigDecl
 {
@@ -35,6 +37,8 @@ public Q_SLOTS:
     void launchAction(QString id, QVariant settings);
 
     void notImplemented(QString id);
+
+private:
     
     
 };

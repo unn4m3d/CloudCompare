@@ -38,6 +38,8 @@ enum  CC_PLUGIN_TYPE
     CC_IO_FILTER_PLUGIN = 4,
 };
 
+class ccAdvancedAPI;
+
 //! Standard CC plugin interface
 /** Version 3.2
 **/
@@ -139,6 +141,8 @@ protected:
 	
 	//! Get the IID of the plugin.
 	virtual const QString& IID() const = 0;
+
+	friend class MainWindow;
 };
 
 Q_DECLARE_METATYPE(const ccPluginInterface *);

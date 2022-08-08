@@ -11314,3 +11314,17 @@ void MainWindow::select(const std::unordered_set<int>& indices)
 {
 	m_ccRoot->selectEntities(indices);
 }
+
+ccPluginInterface* MainWindow::getPluginByIID(const QString& iid)
+{
+	if(m_pluginUIManager == nullptr)
+		return nullptr;
+
+	for(auto* plugin : m_pluginUIManager->m_plugins)
+    {
+        if(plugin->IID() == iid)
+            return plugin;
+    }
+
+    return nullptr;
+}
