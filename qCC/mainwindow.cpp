@@ -2676,7 +2676,12 @@ void MainWindow::doActionSamplePointsOnMesh()
 		
 		if (cloud)
 		{
+			if(mesh->getParent())
+				mesh->getParent()->addChild(cloud);
+			else
+				mesh->addChild(cloud);
 			addToDB(cloud);
+
 		}
 		else
 		{
