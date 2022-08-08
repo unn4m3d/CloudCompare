@@ -23,3 +23,17 @@ NormalEstimationDialog::NormalEstimationDialog(QWidget* parent)
 {
 	setupUi(this);
 }
+
+void NormalEstimationDialog::apply(const advapi::NormalEstimationParams& p)
+{
+	using P = advapi::NormalEstimationParams;
+
+	vb::SetterList<P> l;
+
+	vb::addSetter(l, &P::radius, radiusDoubleSpinBox);
+	vb::addSetter(l, &P::useKnn, useKnnCheckBox);
+	vb::addSetter(l, &P::knnRadius, knnSpinBox);
+	vb::addSetter(l, &P::overwriteCurvature, curvatureCheckBox);
+
+	for(auto& s : l) s(p);
+}

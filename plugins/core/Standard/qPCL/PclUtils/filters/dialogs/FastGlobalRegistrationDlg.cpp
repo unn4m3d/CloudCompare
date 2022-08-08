@@ -187,3 +187,14 @@ void FastGlobalRegistrationDialog::autoEstimateRadius()
 
 	featureRadiusDoubleSpinBox->setValue(largestRadius);
 }
+
+void FastGlobalRegistrationDialog::apply(const advapi::FastGlobalRegistrationParams& p)
+{
+	using P = advapi::FastGlobalRegistrationParams;
+
+	vb::SetterList<P> l;
+
+	vb::addSetter(l, &P::featureRadius, featureRadiusDoubleSpinBox);
+	
+	for(auto& s : l) s(p);
+}

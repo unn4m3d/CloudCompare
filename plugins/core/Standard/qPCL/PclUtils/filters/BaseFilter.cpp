@@ -96,6 +96,7 @@ void BaseFilter::performAction()
 	{
 		assert(false);
 		throwError(InvalidInput);
+		advapi->triggerActionFailed(action_id, "Invalid input");
 		return;
 	}
 
@@ -104,6 +105,7 @@ void BaseFilter::performAction()
 	if (result != Success)
 	{
 		throwError(result);
+		advapi->triggerActionFailed(action_id, QString("Error: %1").arg(result));
 		return;
 	}
 
@@ -112,6 +114,7 @@ void BaseFilter::performAction()
 	if (result != Success)
 	{
 		throwError(result);
+		advapi->triggerActionFailed(action_id, QString("Error: %1").arg(result));
 		return;
 	}
 }

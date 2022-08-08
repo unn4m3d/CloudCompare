@@ -20,6 +20,8 @@
 
 #include <ui_NormalEstimationDlg.h>
 
+#include <NormalEstimationParams.h>
+
 //Qt
 #include <QDialog>
 
@@ -27,6 +29,8 @@ class NormalEstimationDialog : public QDialog, public Ui::NormalEstimationDialog
 {
 public:
 	explicit NormalEstimationDialog(QWidget* parent = nullptr);
+
+	void apply(const advapi::NormalEstimationParams&);
 
 };
 

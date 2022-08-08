@@ -92,7 +92,13 @@ int NormalEstimation::getParametersFromDialog()
 		}
 	}
 
-	if (!dialog.exec())
+	auto api = getMainAppInterface()->getAdvancedAPI();
+	auto action_id = QString("%1/%2").arg(m_iid).arg(m_desc.entryName);
+	auto params = api->params<advapi::NormalEstimationParams>(action_id);
+
+	dialog.apply(params->value);
+
+	if ((!params || ! params->isAuto()) && !dialog.exec())
 	{
 		return CancelledByUser;
 	}

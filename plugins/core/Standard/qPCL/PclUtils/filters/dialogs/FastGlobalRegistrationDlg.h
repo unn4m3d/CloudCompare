@@ -22,6 +22,8 @@
 
 #include <ui_FastGlobalRegistrationDlg.h>
 
+#include <FastGlobalRegistrationParams.h>
+
 class ccPointCloud;
 
 //! Fast Global Registration dialog
@@ -46,6 +48,8 @@ public:
 
 	//! Saves parameters for next call
 	void saveParameters() const;
+
+	void apply(const advapi::FastGlobalRegistrationParams&);
 
 protected:
 	void autoEstimateRadius();

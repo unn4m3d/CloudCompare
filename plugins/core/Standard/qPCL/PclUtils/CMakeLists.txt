@@ -8,6 +8,7 @@ add_library( ${PROJECT_NAME} STATIC )
 
 add_subdirectory( filters )
 add_subdirectory( utils )
+add_subdirectory( params )
 
 target_include_directories( ${PROJECT_NAME}
 	PUBLIC
