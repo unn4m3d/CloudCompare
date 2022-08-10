@@ -62,6 +62,8 @@ public:
 	//! Enables the SF modulation option (SPATIAL method)
 	void enableSFModulation(ScalarType sfMin, ScalarType sfMax);
 
+	Q_SLOT int exec() override;
+
 protected:
 
 	void sliderMoved(int sliderPos);
@@ -89,6 +91,8 @@ protected: //members
 	ScalarType m_sfMax;
 
 	Ui::SubsamplingDialog* m_ui;
+
+	bool m_auto;
 };
 
 #endif

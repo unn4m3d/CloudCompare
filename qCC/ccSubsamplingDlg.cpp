@@ -25,6 +25,8 @@
 //qCC_db
 #include <ccGenericPointCloud.h>
 
+#include "mainwindow.h"
+
 //Exponent of the 'log' scale used for 'SPACE' interval
 static const double SPACE_RANGE_EXPONENT = 0.05;
 
@@ -36,6 +38,7 @@ ccSubsamplingDlg::ccSubsamplingDlg(unsigned maxPointCount, double maxCloudRadius
 	, m_sfMin(0)
 	, m_sfMax(0)
 	, m_ui( new Ui::SubsamplingDialog )
+	, m_auto(false)
 {
 	m_ui->setupUi(this);
 
@@ -47,8 +50,29 @@ ccSubsamplingDlg::ccSubsamplingDlg(unsigned maxPointCount, double maxCloudRadius
 	connect(m_ui->samplingValue,  qOverload<double>(&QDoubleSpinBox::valueChanged), this, &ccSubsamplingDlg::samplingRateChanged);
 	connect(m_ui->samplingMethod, qOverload<int>(&QComboBox::currentIndexChanged),		  this, &ccSubsamplingDlg::changeSamplingMethod);
 
+	auto window = qobject_cast<MainWindow*>(parent);
+	if(window)
+	{
+		auto api = window->getAdvancedAPI();
+		if(api->getSettings().canConvert<advapi::SubsampleSettings>())
+		{
+			auto params = api->getSettings().value<advapi::SubsampleSettings>();
+
+			m_auto = params.automatic;
+
+			m_ui->samplingMethod->setCurrentIndex(params.method);
+			m_ui->samplingValue->setValue(params.value);
+		}
+	}
+
 	m_ui->samplingMethod->setCurrentIndex(1);
 	sliderMoved(m_ui->slider->sliderPosition());
+}
+
+int ccSubsamplingDlg::exec()
+{
+	if(m_auto) return 1;
+	return QDialog::exec();
 }
 
 ccSubsamplingDlg::~ccSubsamplingDlg()

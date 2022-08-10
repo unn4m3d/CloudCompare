@@ -3,6 +3,7 @@
 #include <QObject>
 #include <QVariant>
 #include "ccAdvancedAPISigDecl.h"
+#include "advapi_impl/settings.hpp"
 
 class ccHObject;
 class ccPluginUIManager;
@@ -21,6 +22,11 @@ public:
     void triggerActionFailed(QString id, QString reason);
     void triggerActionCanceled(QString id);
 
+    QVariant& getSettings()
+    {
+        return m_currentSettings;
+    }
+
 Q_SIGNALS:
     void initialized();
 
@@ -34,11 +40,11 @@ Q_SIGNALS:
     void actionFinished(QString);
 
 public Q_SLOTS:
-    void launchAction(QString id, QVariant settings);
+    void launchAction(QString id, const QVariant& settings);
 
     void notImplemented(QString id);
 
 private:
-    
+    QVariant m_currentSettings;
     
 };

@@ -24,8 +24,10 @@ void ccAdvancedAPI::triggerActionCanceled(QString id)
     Q_EMIT actionCanceled(id);
 }
 
-void ccAdvancedAPI::launchAction(QString action, QVariant settings)
+void ccAdvancedAPI::launchAction(QString action, const QVariant& settings)
 {
+    m_currentSettings = settings;
+
     #include "advapi_impl/advapi_switch.h"
     
     Q_EMIT notImplemented(action);
@@ -38,3 +40,5 @@ void ccAdvancedAPI::notImplemented(QString id)
 {
     Q_EMIT actionFailed(id, "Action is missing or not implemented");
 }
+
+static int subsample_settings_id = qRegisterMetaType<advapi::SubsampleSettings>();
