@@ -36,6 +36,7 @@
 //qCC_db
 #include <cc2DLabel.h>
 #include <cc2DViewportObject.h>
+#include <ccActionEvent.h>
 #include <ccCameraSensor.h>
 #include <ccColorScalesManager.h>
 #include <ccCylinder.h>
@@ -6227,6 +6228,26 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 		updateOverlayDialogsPlacement();
 		break;
 	default:
+		if(event->type() == ccActionEvent::getType())
+		{
+			auto* evt = static_cast<ccActionEvent*>(event);
+			switch(evt->getKind())
+			{
+				case ccActionEvent::TRIGGERED:
+						Q_EMIT m_advancedAPI.actionTriggered(evt->getActionId());
+					break;
+				case ccActionEvent::FINISHED:
+						Q_EMIT m_advancedAPI.actionFinished(evt->getActionId());
+					break;
+				case ccActionEvent::CANCELLED:
+						Q_EMIT m_advancedAPI.actionCanceled(evt->getActionId());
+					break;
+				default:
+					return false;
+			}
+
+			return true;
+		}
 		//nothing to do
 		break;
 	}
