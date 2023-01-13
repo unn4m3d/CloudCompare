@@ -5,6 +5,7 @@ target_sources( ${PROJECT_NAME}
 		${CMAKE_CURRENT_LIST_DIR}/cc2DLabel.h
 		${CMAKE_CURRENT_LIST_DIR}/cc2DViewportLabel.h
 		${CMAKE_CURRENT_LIST_DIR}/cc2DViewportObject.h
+		${CMAKE_CURRENT_LIST_DIR}/ccActionEvent.h
 		${CMAKE_CURRENT_LIST_DIR}/ccAdvancedTypes.h
 		${CMAKE_CURRENT_LIST_DIR}/ccArray.h
 		${CMAKE_CURRENT_LIST_DIR}/ccBasicTypes.h

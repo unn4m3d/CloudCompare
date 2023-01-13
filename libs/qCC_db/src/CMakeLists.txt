@@ -4,6 +4,7 @@ target_sources( ${PROJECT_NAME}
 	    ${CMAKE_CURRENT_LIST_DIR}/cc2DLabel.cpp
 	    ${CMAKE_CURRENT_LIST_DIR}/cc2DViewportLabel.cpp
 	    ${CMAKE_CURRENT_LIST_DIR}/cc2DViewportObject.cpp
+		${CMAKE_CURRENT_LIST_DIR}/ccActionEvent.cpp
 	    ${CMAKE_CURRENT_LIST_DIR}/ccAdvancedTypes.cpp
 	    ${CMAKE_CURRENT_LIST_DIR}/ccBBox.cpp
 	    ${CMAKE_CURRENT_LIST_DIR}/ccBox.cpp

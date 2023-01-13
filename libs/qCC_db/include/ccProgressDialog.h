@@ -25,9 +25,11 @@
 #include <QProgressDialog>
 #include <QAtomicInt>
 #include <QTimer>
+#include <QMainWindow>
 
 //CCCoreLib
 #include <GenericProgressCallback.h>
+
 
 //! Graphical progress indicator (thread-safe)
 /** Implements the GenericProgressCallback interface, in order
@@ -69,6 +71,8 @@ public:
 	virtual void setMethodTitle(QString methodTitle);
 	//! setInfo with a QString as argument
 	virtual void setInfo(QString infoStr);
+
+	QMainWindow* getMainWindow();
 
 protected:
 

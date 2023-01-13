@@ -21,6 +21,7 @@
 #include <QCoreApplication>
 #include <QPushButton>
 #include <QProgressBar>
+#include "ccActionEvent.h"
 
 ccProgressDialog::ccProgressDialog(	bool showCancelButton,
 									QWidget* parent/*=nullptr*/ )
@@ -91,11 +92,30 @@ void ccProgressDialog::start()
 {
 	m_lastRefreshValue = -1;
 	show();
+	if(auto iface = getMainWindow())
+		QCoreApplication::postEvent(iface, new ccActionEvent(ccActionEvent::TRIGGERED, "unknown", ""));
 	QCoreApplication::processEvents();
 }
 
 void ccProgressDialog::stop()
 {
 	hide();
+	if(auto iface = getMainWindow())
+		QCoreApplication::postEvent(iface, new ccActionEvent(ccActionEvent::FINISHED, "unknown", ""));
 	QCoreApplication::processEvents();
+}
+
+QMainWindow* ccProgressDialog::getMainWindow()
+{
+	QObject* p = parent();
+
+	while(p)
+	{
+		if(auto interface = dynamic_cast<QMainWindow*>(p))
+			return interface;
+
+		p = p->parent();
+	}
+
+	return nullptr;
 }
