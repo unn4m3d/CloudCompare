@@ -81,6 +81,8 @@ target_sources( ${PROJECT_NAME}
 		${CMAKE_CURRENT_LIST_DIR}/ccTorus.h
 		${CMAKE_CURRENT_LIST_DIR}/ccViewportParameters.h
 		${CMAKE_CURRENT_LIST_DIR}/qCC_db.h
+		${CMAKE_CURRENT_LIST_DIR}/vb/field.hpp
+		${CMAKE_CURRENT_LIST_DIR}/vb/nameof.hpp
 )
 
 target_include_directories( ${PROJECT_NAME}
