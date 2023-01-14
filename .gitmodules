@@ -25,3 +25,6 @@
 [submodule "plugins/vbasing"]
 	path = plugins/vbasing
 	url = git@github-vb-cc:unn4m3d/vb_cloudcompare
+[submodule "libs/pfr"]
+	path = libs/pfr
+	url = https://github.com/boostorg/pfr

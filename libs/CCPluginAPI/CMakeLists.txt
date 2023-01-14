@@ -1,6 +1,10 @@
 project( CCPluginAPI )
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
 add_library( ${PROJECT_NAME} SHARED )
+
+
 
 find_package( Qt5
 	COMPONENTS
@@ -11,6 +15,7 @@ find_package( Qt5
 add_subdirectory( include )
 add_subdirectory( src )
 add_subdirectory( ui )
+
 
 # We only need the includes from the stub
 get_target_property( STUB_INCLUDES CCPluginStub INCLUDE_DIRECTORIES )

@@ -38,3 +38,15 @@ void ccAdvancedAPI::notImplemented(QString id)
 {
     Q_EMIT actionFailed(id, "Action is missing or not implemented");
 }
+
+void ccAdvancedAPI::setParams(const QString& action, std::shared_ptr<vb::SerializableHolder> params)
+{
+    m_params[action] = params;
+}
+
+std::shared_ptr<vb::SerializableHolder> ccAdvancedAPI::getParams(const QString& action)
+{
+    return m_params[action];
+}
+
+

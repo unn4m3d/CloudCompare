@@ -1,6 +1,9 @@
 project( QCC_DB_LIB )
 
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 add_library( ${PROJECT_NAME} SHARED )
+
 
 add_subdirectory( include )
 add_subdirectory( src )
@@ -10,7 +13,9 @@ add_subdirectory( extern/CCCoreLib EXCLUDE_FROM_ALL )
 target_link_libraries( ${PROJECT_NAME}
     CCCoreLib
     CC_FBO_LIB
+    Boost::pfr
 )
+
 
 target_compile_definitions( ${PROJECT_NAME} PRIVATE QCC_DB_LIBRARY_BUILD QT_NO_KEYWORDS )
 

@@ -2,6 +2,9 @@ option( PLUGIN_STANDARD_QPCL "Install qPCL plugin" OFF )
 
 if( PLUGIN_STANDARD_QPCL )	  
 	project( QPCL_PLUGIN )
+
+	set(CMAKE_CXX_STANDARD 20)
+	set(CMAKE_CXX_STANDARD_REQUIRED ON)
 	
 	AddPlugin( NAME ${PROJECT_NAME} )
 

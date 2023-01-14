@@ -3,6 +3,8 @@
 #include <QObject>
 #include <QVariant>
 #include "ccAdvancedAPISigDecl.h"
+#include <map>
+#include "vb/field.hpp"
 
 class ccHObject;
 class ccPluginUIManager;
@@ -20,6 +22,15 @@ public:
     void triggerActionCompleted(QString id, QVariant results);
     void triggerActionFailed(QString id, QString reason);
     void triggerActionCanceled(QString id);
+
+    void setParams(const QString&, std::shared_ptr<vb::SerializableHolder>);
+    std::shared_ptr<vb::SerializableHolder> getParams(const QString&);
+
+    template<typename T>
+    std::shared_ptr<vb::Serializable<T>> params(const QString& a)
+    {
+        return std::dynamic_pointer_cast<vb::Serializable<T>>(getParams(a));
+    }
 
 Q_SIGNALS:
     void initialized();
@@ -40,5 +51,6 @@ public Q_SLOTS:
 
 private:
     
+    QMap<QString, std::shared_ptr<vb::SerializableHolder>> m_params;
     
 };
