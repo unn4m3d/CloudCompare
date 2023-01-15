@@ -103,7 +103,6 @@ namespace vb
         {
             l << [memberPtr, w](const P& params)
             {
-                std::cerr << "Setter for numeric :" << fieldName<Member>() << ", present: " << (params.*memberPtr).present << std::endl;
                 if((params.*memberPtr).present)
                 {
                     w->setValue((params.*memberPtr).value);
