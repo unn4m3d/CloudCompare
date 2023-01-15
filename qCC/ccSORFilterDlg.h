@@ -19,6 +19,7 @@
 #define CC_SOR_FILTER_DLG_HEADER
 
 #include <QDialog>
+#include <advapi/SORFilterParams.h>
 
 namespace Ui {
 	class SorFilterDialog;
@@ -41,6 +42,8 @@ public:
 	
 	double nSigma() const;
 	void setNSigma( double nSigma );
+
+	void apply(const advapi::SORFilterParams&);
 	
 private:
 	Ui::SorFilterDialog* m_ui;

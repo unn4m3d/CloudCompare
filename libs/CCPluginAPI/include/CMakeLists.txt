@@ -17,6 +17,7 @@ target_sources( ${PROJECT_NAME}
 		${CMAKE_CURRENT_LIST_DIR}/ccScopeGuard.h
 		${CMAKE_CURRENT_LIST_DIR}/ccAdvancedAPISigDecl.h
 		${CMAKE_CURRENT_LIST_DIR}/advapi/MeshSampleParams.h
+		${CMAKE_CURRENT_LIST_DIR}/advapi/SORFilterParams.h
 		${CMAKE_CURRENT_LIST_DIR}/advapi/SubsampleParams.h
 )
 

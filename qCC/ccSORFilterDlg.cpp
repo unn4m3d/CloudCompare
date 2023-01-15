@@ -50,3 +50,11 @@ void ccSORFilterDlg::setNSigma(double nSigma)
 {
 	m_ui->nSigmaDoubleSpinBox->setValue( nSigma );
 }
+
+void ccSORFilterDlg::apply(const advapi::SORFilterParams& p)
+{
+	vb::SetterList<advapi::SORFilterParams> l;
+	vb::addSetter(l, &advapi::SORFilterParams::nPoints, m_ui->knnSpinBox);
+	vb::addSetter(l, &advapi::SORFilterParams::sigma, m_ui->nSigmaDoubleSpinBox);
+	for(auto& s: l) s(p);
+}

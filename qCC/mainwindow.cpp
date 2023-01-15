@@ -5548,6 +5548,7 @@ void MainWindow::doActionMatchScales()
 void MainWindow::doActionSORFilter()
 {
 	ACTION_GUARD("SORFilter");
+
 	ccSORFilterDlg sorDlg(this);
 
 	//set semi-persistent/dynamic parameters
@@ -5555,6 +5556,8 @@ void MainWindow::doActionSORFilter()
 	static double s_sorFilterNSigma = 1.0;
 	sorDlg.setKNN(s_sorFilterKnn);
 	sorDlg.setNSigma(s_sorFilterNSigma);
+	if(auto params = m_advancedAPI.params<advapi::SORFilterParams>("SORFilter"))
+		sorDlg.apply(params->value);
 	if (!sorDlg.exec())
 	{
 		m_advancedAPI.triggerActionCanceled("SORFilter");
