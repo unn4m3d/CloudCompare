@@ -273,3 +273,12 @@ void ccSubsamplingDlg::enableSFModulation(ScalarType sfMin, ScalarType sfMax)
 	m_ui->minSFlabel->setText(QString::number(sfMin));
 	m_ui->maxSFlabel->setText(QString::number(sfMax));
 }
+
+void ccSubsamplingDlg::apply(const advapi::SubsampleParams& p)
+{
+	vb::SetterList<advapi::SubsampleParams> l;
+	vb::addSetter(l, &advapi::SubsampleParams::method, m_ui->samplingMethod);
+	vb::addSetter(l, &advapi::SubsampleParams::value, m_ui->samplingValue);
+
+	for(auto& s : l) s(p);
+}

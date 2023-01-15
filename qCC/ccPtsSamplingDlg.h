@@ -19,6 +19,7 @@
 #define CC_POINTS_SAMPLING_DLG_HEADER
 
 #include <ui_ptsSamplingDlg.h>
+#include <advapi/MeshSampleParams.h>
 
 //! Dialog: points sampling on a mesh
 class ccPtsSamplingDlg : public QDialog, public Ui::PointsSamplingDialog
@@ -42,6 +43,8 @@ public:
 	void setDensityValue(double density);
 	void setGenerateNormals(bool state);
 	void setUseDensity(bool state);
+
+	void apply(const advapi::MeshSampleParams&);
 };
 
 #endif //CC_POINTS_SAMPLING_DLG_HEADER

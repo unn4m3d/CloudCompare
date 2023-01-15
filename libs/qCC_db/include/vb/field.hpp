@@ -6,12 +6,17 @@
 #include <boost/pfr.hpp>
 #include <type_traits>
 #include <QVector>
+#include <typeinfo>
 #include <memory>
+#include <iostream>
 namespace vb
 {
     // Just an empty base class to use dynamic casts
     struct SerializableHolder {
-        virtual ~SerializableHolder();
+        virtual ~SerializableHolder(){}
+
+        virtual size_t hash_code() { return 0; }
+        virtual const char* type_name() { return "none"; }
     };
 
     template<typename T>
@@ -20,6 +25,16 @@ namespace vb
         T value;
 
         virtual ~Serializable(){}
+
+        size_t hash_code() override 
+        {
+            return typeid(*this).hash_code();
+        }
+
+        const char* type_name() override
+        {
+            return typeid(T).name();
+        }
     };
 
     template<typename T, typename E, E Name>
@@ -88,6 +103,7 @@ namespace vb
         {
             l << [memberPtr, w](const P& params)
             {
+                std::cerr << "Setter for numeric :" << fieldName<Member>() << ", present: " << (params.*memberPtr).present << std::endl;
                 if((params.*memberPtr).present)
                 {
                     w->setValue((params.*memberPtr).value);

@@ -4,6 +4,7 @@
 #include <QVariant>
 #include "ccAdvancedAPISigDecl.h"
 #include <map>
+#include <iostream>
 #include "vb/field.hpp"
 
 class ccHObject;
@@ -29,7 +30,12 @@ public:
     template<typename T>
     std::shared_ptr<vb::Serializable<T>> params(const QString& a)
     {
-        return std::dynamic_pointer_cast<vb::Serializable<T>>(getParams(a));
+        auto p = getParams(a);
+        std::cerr << "Get params for " << a.toStdString() << ":" << typeid(p.get()).name()  << ":" << typeid(p.get()).hash_code() << std::endl;
+        auto ptr = std::dynamic_pointer_cast<vb::Serializable<T>>(p);
+
+        std::cerr << "Got after cast: " << (unsigned long long) ptr.get() << std::endl;
+        return ptr;
     }
 
 Q_SIGNALS:

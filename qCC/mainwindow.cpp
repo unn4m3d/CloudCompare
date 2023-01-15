@@ -2643,6 +2643,8 @@ void MainWindow::doActionSamplePointsOnMesh()
 	dlg.setDensityValue(s_ptsSamplingDensity);
 	dlg.setGenerateNormals(s_ptsSampleNormals);
 	dlg.setUseDensity(s_useDensity);
+	if(auto params = m_advancedAPI.params<advapi::MeshSampleParams>("SamplePointsOnMesh"))
+		dlg.apply(params->value);;
 	if (!dlg.exec())
 		return;
 
@@ -4012,6 +4014,8 @@ void MainWindow::doActionSubsample()
 	bool hasValidSF = ccScalarField::ValidValue(sfMin) && ccScalarField::ValidValue(sfMax);
 	if (hasValidSF)
 		sDlg.enableSFModulation(sfMin,sfMax);
+	if(auto params = m_advancedAPI.params<advapi::SubsampleParams>("Subsample"))
+		sDlg.apply(params->value);
 	if (!sDlg.exec())
 	{
 		m_advancedAPI.triggerActionCanceled("Subsample");

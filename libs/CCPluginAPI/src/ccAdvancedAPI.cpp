@@ -1,4 +1,5 @@
 #include <ccAdvancedAPI.h> 
+#include <iostream>
 
 ccAdvancedAPI::ccAdvancedAPI(QObject* parent) :
     ccAdvancedAPISigDecl(parent)
@@ -42,10 +43,13 @@ void ccAdvancedAPI::notImplemented(QString id)
 void ccAdvancedAPI::setParams(const QString& action, std::shared_ptr<vb::SerializableHolder> params)
 {
     m_params[action] = params;
+    std::cerr << "Set params for " << action.toStdString() << ":" << typeid(params.get()).name() << ":" << (long long unsigned)params.get()  << ":" << params->type_name() << std::endl;
 }
 
 std::shared_ptr<vb::SerializableHolder> ccAdvancedAPI::getParams(const QString& action)
 {
+    auto params = m_params[action];
+    std::cerr << "Get params for " << action.toStdString() << ":" << typeid(params.get()).name()  << ":" << (long long unsigned)params.get() << ":" << params->type_name() << std::endl;
     return m_params[action];
 }
 

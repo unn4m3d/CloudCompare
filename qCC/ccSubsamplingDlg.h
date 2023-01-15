@@ -24,6 +24,8 @@
 //CCCoreLib
 #include <CCTypes.h>
 
+#include <advapi/SubsampleParams.h>
+
 class ccGenericPointCloud;
 
 namespace CCCoreLib {
@@ -61,6 +63,8 @@ public:
 
 	//! Enables the SF modulation option (SPATIAL method)
 	void enableSFModulation(ScalarType sfMin, ScalarType sfMax);
+
+	void apply(const advapi::SubsampleParams&);
 
 protected:
 

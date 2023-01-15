@@ -73,3 +73,13 @@ void ccPtsSamplingDlg::setPointsNumber(int count)
 {
 	pnSpinBox->setValue(count);
 }
+
+void ccPtsSamplingDlg::apply(const advapi::MeshSampleParams& p)
+{
+	vb::SetterList<advapi::MeshSampleParams> l;
+	vb::addSetter(l, &advapi::MeshSampleParams::useDensity, dRadioButton);
+	vb::addSetter(l, &advapi::MeshSampleParams::density, dDoubleSpinBox);
+	vb::addSetter(l, &advapi::MeshSampleParams::number, pnSpinBox);
+
+	for(auto& s : l) s(p);
+}
