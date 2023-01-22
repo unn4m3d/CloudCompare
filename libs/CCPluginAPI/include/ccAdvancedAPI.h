@@ -5,6 +5,7 @@
 #include "ccAdvancedAPISigDecl.h"
 #include <map>
 #include <iostream>
+#include <memory>
 #include "vb/field.hpp"
 
 class ccHObject;

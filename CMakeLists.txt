@@ -1,8 +1,8 @@
 cmake_minimum_required( VERSION 3.10 )
 
 project( CloudCompareProjects )
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+#set(CMAKE_CXX_STANDARD 20)
+#set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_definitions(-fconcepts)
 
 # One shouldn't generate the BUILD project directly in the SOURCES folder!

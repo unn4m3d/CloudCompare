@@ -1,6 +1,6 @@
 project( CloudCompare VERSION 2.13.0 )
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+#set(CMAKE_CXX_STANDARD 20)
+#set(CMAKE_CXX_STANDARD_REQUIRED ON)
 include( CMakePolicies NO_POLICY_SCOPE )
 
 include_directories( ${CloudComparePlugins_SOURCE_DIR} )

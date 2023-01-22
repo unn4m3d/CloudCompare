@@ -82,6 +82,7 @@ target_sources( ${PROJECT_NAME}
 		${CMAKE_CURRENT_LIST_DIR}/ccViewportParameters.h
 		${CMAKE_CURRENT_LIST_DIR}/qCC_db.h
 		${CMAKE_CURRENT_LIST_DIR}/vb/field.hpp
+		${CMAKE_CURRENT_LIST_DIR}/vb/field_traits.hpp
 		${CMAKE_CURRENT_LIST_DIR}/vb/nameof.hpp
 )
 

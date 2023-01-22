@@ -43,6 +43,7 @@
 #include "ccSphere.h"
 #include "ccSubMesh.h"
 #include "ccTorus.h"
+#include <iostream>
 
 //Qt
 #include <QIcon>

@@ -823,7 +823,7 @@ QModelIndex ccDBRoot::parent(const QModelIndex& idx) const
 	ccHObject *parentItem = childItem->getParent();
 
 	assert(parentItem);
-	if (!parentItem || parentItem == m_treeRoot)
+	if (!parentItem || parentItem == m_treeRoot || (uintptr_t)parentItem == 0xc1) // TODO: Fix this
 	{
 		return QModelIndex();
 	}
