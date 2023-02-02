@@ -34,6 +34,11 @@ public:
         return std::dynamic_pointer_cast<vb::Serializable<T>>(getParams(a));
     }
 
+    void triggerActionFinished(const QString& s)
+    {
+        Q_EMIT actionFinished(s);
+    }
+
 Q_SIGNALS:
     void initialized();
 

@@ -156,7 +156,7 @@
 
 #include "ccScopeGuard.h"
 
-#define ACTION_GUARD(x) Q_EMIT m_advancedAPI.actionTriggered(x); ccScopeGuard cc_sg([this](){ Q_EMIT m_advancedAPI.actionFinished(x); })
+#define ACTION_GUARD(x) Q_EMIT m_advancedAPI.actionTriggered(x); ccScopeGuard cc_sg([this](){ m_advancedAPI.triggerActionFinished(x); })
 
 //global static pointer (as there should only be one instance of MainWindow!)
 static MainWindow* s_instance  = nullptr;
@@ -2643,10 +2643,16 @@ void MainWindow::doActionSamplePointsOnMesh()
 	dlg.setDensityValue(s_ptsSamplingDensity);
 	dlg.setGenerateNormals(s_ptsSampleNormals);
 	dlg.setUseDensity(s_useDensity);
-	if(auto params = m_advancedAPI.params<advapi::MeshSampleParams>("SamplePointsOnMesh"))
-		dlg.apply(params->value);;
-	if (!dlg.exec())
+
+	auto params = m_advancedAPI.params<advapi::MeshSampleParams>("SamplePointsOnMesh");
+	if(params)
+		dlg.apply(params->value);
+	
+	if((!params || !params->isAuto()) && !dlg.exec())
+	{
+		m_advancedAPI.triggerActionCanceled("SamplePointsOnMesh");
 		return;
+	}
 
 	ccProgressDialog pDlg(false, this);
 	pDlg.setAutoClose(false);
@@ -4014,9 +4020,13 @@ void MainWindow::doActionSubsample()
 	bool hasValidSF = ccScalarField::ValidValue(sfMin) && ccScalarField::ValidValue(sfMax);
 	if (hasValidSF)
 		sDlg.enableSFModulation(sfMin,sfMax);
-	if(auto params = m_advancedAPI.params<advapi::SubsampleParams>("Subsample"))
+
+	auto params = m_advancedAPI.params<advapi::SubsampleParams>("Subsample");
+	
+	if(params)
 		sDlg.apply(params->value);
-	if (!sDlg.exec())
+		
+	if ((!params || !params->isAuto()) && !sDlg.exec())
 	{
 		m_advancedAPI.triggerActionCanceled("Subsample");
 		return;
@@ -5556,13 +5566,18 @@ void MainWindow::doActionSORFilter()
 	static double s_sorFilterNSigma = 1.0;
 	sorDlg.setKNN(s_sorFilterKnn);
 	sorDlg.setNSigma(s_sorFilterNSigma);
-	if(auto params = m_advancedAPI.params<advapi::SORFilterParams>("SORFilter"))
+
+	auto params = m_advancedAPI.params<advapi::SORFilterParams>("SORFilter");
+
+	if(params)
 		sorDlg.apply(params->value);
-	if (!sorDlg.exec())
+
+	if ((!params || !params->isAuto()) && !sorDlg.exec())
 	{
 		m_advancedAPI.triggerActionCanceled("SORFilter");
 		return;
 	}
+
 	//update semi-persistent/dynamic parameters
 	s_sorFilterKnn = sorDlg.KNN();
 	s_sorFilterNSigma = sorDlg.nSigma();
@@ -11345,6 +11360,7 @@ void MainWindow::doActionComparePlanes()
 
 void MainWindow::select(const std::unordered_set<int>& indices)
 {
+	ACTION_GUARD("Select");
 	m_ccRoot->selectEntities(indices);
 }
 

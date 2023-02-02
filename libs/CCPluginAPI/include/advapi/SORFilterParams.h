@@ -8,7 +8,8 @@ namespace advapi
         enum list 
         {
             NPoints,
-            Sigma
+            Sigma,
+            Auto
         };
 
         template<typename T, list Name>
@@ -16,5 +17,6 @@ namespace advapi
 
         Field<int, NPoints> nPoints;
         Field<double, Sigma> sigma;
+        Field<bool, Auto> _auto;
     };
 }

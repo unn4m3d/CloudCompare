@@ -8,7 +8,8 @@ namespace advapi
         enum list 
         {
             Method,
-            Value
+            Value,
+            Auto
         };
 
         template<typename T, list Name>
@@ -16,5 +17,6 @@ namespace advapi
 
         Field<int, Method> method;
         Field<double, Value> value;
+        Field<bool, Auto> _auto;
     };
 }

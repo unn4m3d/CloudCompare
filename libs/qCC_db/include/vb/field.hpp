@@ -9,9 +9,10 @@ namespace vb
     // Just an empty base class to use dynamic casts
     struct SerializableHolder {
         virtual ~SerializableHolder(){}
-
-        virtual size_t hash_code() { return 0; }
-        virtual const char* type_name() { return "none"; }
+        virtual bool isAuto() const
+        {
+            return false;
+        }
     };
 
     template<typename T>
@@ -21,15 +22,7 @@ namespace vb
 
         virtual ~Serializable(){}
 
-        size_t hash_code() override 
-        {
-            return typeid(*this).hash_code();
-        }
-
-        const char* type_name() override
-        {
-            return typeid(T).name();
-        }
+        virtual bool isAuto() const;
     };
 
     template<typename T, typename E, E Name>
@@ -86,11 +79,30 @@ namespace vb
                     w->setCurrentIndex((params.*memberPtr).value);
             };
         }
+
+        template<typename T>
+        static bool isAuto(const T& value)
+        requires requires(T x){ x._auto; }
+        {
+            return value._auto.present && value._auto.value;
+        }
+
+        template<typename T>
+        static bool isAuto(const T&)
+        {
+            return false;
+        }
     }
 
     template<typename P, typename Member, typename Widget>
     void addSetter(SetterList<P>& l, Member P::* memberPtr, Widget* w)
     {
         detail::addSetter<P, Member, Widget>(l, memberPtr, w);
+    }
+
+    template<typename T>
+    bool Serializable<T>::isAuto() const
+    {
+        return detail::isAuto(value);
     }
 }

@@ -9,7 +9,8 @@ namespace advapi
         {
             UseDensity,
             Number,
-            Density
+            Density,
+            Auto
         };
 
         template<typename T, list Name>
@@ -18,5 +19,6 @@ namespace advapi
         Field<bool, UseDensity> useDensity;
         Field<int, Number> number;
         Field<double, Density> density;
+        Field<bool, Auto> _auto;
     };
 }
