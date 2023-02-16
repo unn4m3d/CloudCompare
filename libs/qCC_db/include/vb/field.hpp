@@ -37,7 +37,30 @@ namespace vb
 
 
     template<typename P>
-    using Setter = std::function<void(const P&)>;
+    using SetterFunc = std::function<void(P&)>;
+
+    template<typename P>
+    class Setter
+    {
+    public:
+        Setter() = default;
+
+        Setter(const SetterFunc<const P>& setter, const SetterFunc<P>& getter) :
+            m_setter(setter), m_getter(getter) {}
+
+        void operator()(const P& p)
+        {
+            m_setter(p);
+        }
+
+        void get(P& p)
+        {
+            m_getter(p);
+        }
+    private:
+        SetterFunc<const P> m_setter;
+        SetterFunc<P> m_getter;
+    };
 
     template<typename P>
     using SetterList = QVector<Setter<P>>;
@@ -49,35 +72,69 @@ namespace vb
         static void addSetter(SetterList<P>& l, Member P::* memberPtr, Widget* w)
             requires requires(Widget w, Member a){ w.setValue(a.value); }
         {
-            l << [memberPtr, w](const P& params)
-            {
-                if((params.*memberPtr).present)
+            auto oldVal = w->value();
+            l << Setter<P>(
+                [memberPtr, w](const P& params)
                 {
-                    w->setValue((params.*memberPtr).value);
+                    if((params.*memberPtr).present)
+                        w->setValue((params.*memberPtr).value);
+                },
+                [memberPtr, w, oldVal](P& params)
+                {   
+                    auto val = w->value();
+                    if(val != oldVal)
+                    {
+                        (params.*memberPtr).present = true;
+                        (params.*memberPtr).value = val;
+                    }
                 }
-            };
+            );
         }
 
         template<typename P, typename Member, typename Widget>
         static void addSetter(SetterList<P>& l, Member P::* memberPtr, Widget* w)
             requires requires(Widget w){ w.setChecked(true); }
         {
-            l << [memberPtr, w](const P& params)
-            {
-                if((params.*memberPtr).present)
-                    w->setChecked((params.*memberPtr).value);
-            };
+            auto oldVal = w->isChecked();
+            l << Setter<P>(
+                [memberPtr, w](const P& params)
+                {
+                    if((params.*memberPtr).present)
+                        w->setChecked((params.*memberPtr).value);
+                },
+                [memberPtr, w, oldVal](P& params)
+                {   
+                    auto val = w->isChecked();
+                    if(val != oldVal)
+                    {
+                        (params.*memberPtr).present = true;
+                        (params.*memberPtr).value = val;
+                    }
+                }
+            );
         }
 
         template<typename P, typename Member, typename Widget>
         static void addSetter(SetterList<P>& l, Member P::* memberPtr, Widget* w)
             requires requires(Widget w){ w.setCurrentIndex(0); }
         {
-            l << [memberPtr, w](const P& params)
-            {
-                if((params.*memberPtr).present)
-                    w->setCurrentIndex((params.*memberPtr).value);
-            };
+            auto oldVal = w->currentIndex();
+            l << Setter<P>(
+                [memberPtr, w](const P& params)
+                {
+                    if((params.*memberPtr).present)
+                        w->setCurrentIndex((params.*memberPtr).value);
+                },
+                [memberPtr, w, oldVal](P& params)
+                {   
+                    auto val = w->currentIndex();
+                    if(val != oldVal)
+                    {
+                        (params.*memberPtr).present = true;
+                        (params.*memberPtr).value = val;
+                    }
+                }
+            );
         }
 
         template<typename T>
