@@ -45,9 +45,23 @@ void ccAdvancedAPI::setParams(const QString& action, std::shared_ptr<vb::Seriali
     m_params[action] = params;
 }
 
-std::shared_ptr<vb::SerializableHolder> ccAdvancedAPI::getParams(const QString& action)
+std::shared_ptr<vb::SerializableHolder> ccAdvancedAPI::getParams(const QString& action, bool del)
 {
-    return m_params[action];
+    /*auto params = m_params[action];
+    if(del)m_params.erase(action);
+    return params;*/
+
+    auto it = m_params.find(action);
+
+    if(it != m_params.end())
+    {
+        auto params = *it;
+        if(del)
+            m_params.erase(it);
+        return params;
+    }
+    else
+        return std::shared_ptr<vb::SerializableHolder>(nullptr);
 }
 
 

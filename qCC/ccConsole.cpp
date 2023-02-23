@@ -119,7 +119,7 @@ ccConsole::~ccConsole()
 
 void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
-#ifndef QT_DEBUG
+/*#ifndef QT_DEBUG
 	if (!ccConsole::QtMessagesEnabled())
 	{
 		return;
@@ -129,7 +129,7 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
 	{
 		return;
 	}
-#endif
+#endif*/
 
 	QString message = QString("[%1] ").arg(context.function) + msg; // QString("%1 (%1:%1, %1)").arg(msg).arg(context.file).arg(context.line).arg(context.function);
 
@@ -157,7 +157,7 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
 		break;
 	}
 	
-#ifdef QT_DEBUG
+//#ifdef QT_DEBUG
 	// Also send the message to the console so we can look at the output when CC has quit
 	//	(in Qt Creator's Application Output for example)
 	switch (type)
@@ -174,7 +174,7 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
 			break;
 	}
 	
-#endif
+//#endif
 }
 
 void ccConsole::EnableQtMessages(bool state)

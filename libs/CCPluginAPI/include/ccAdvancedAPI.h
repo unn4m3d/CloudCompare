@@ -26,12 +26,12 @@ public:
     void triggerActionCanceled(QString id);
 
     void setParams(const QString&, std::shared_ptr<vb::SerializableHolder>);
-    std::shared_ptr<vb::SerializableHolder> getParams(const QString&);
+    std::shared_ptr<vb::SerializableHolder> getParams(const QString&, bool = true);
 
     template<typename T>
-    std::shared_ptr<vb::Serializable<T>> params(const QString& a)
+    std::shared_ptr<vb::Serializable<T>> params(const QString& a, bool del = false)
     {
-        return std::dynamic_pointer_cast<vb::Serializable<T>>(getParams(a));
+        return std::dynamic_pointer_cast<vb::Serializable<T>>(getParams(a, del));
     }
 
     void triggerActionFinished(const QString& s)
