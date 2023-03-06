@@ -312,3 +312,72 @@ void ccRegistrationDlg::swapModelAndData()
 
 	updateGUI();
 }
+
+void ccRegistrationDlg::apply(const advapi::RegisterParams& p)
+{
+	using P = advapi::RegisterParams;
+	vb::SetterList<P> l;
+	
+	{
+		auto w = maxIterationCount;
+		auto en = iterationsCriterion;
+		auto memberPtr = &P::nIter;
+		auto oldVal = w->value();
+		l << vb::Setter<P>(
+			[memberPtr, w, en](const P& params)
+			{
+				if((params.*memberPtr).present)
+				{
+					en->setChecked(true);
+					w->setValue((params.*memberPtr).value);
+				}
+			},
+			[memberPtr, w, oldVal](P& params)
+			{   
+				auto val = w->value();
+				if(val != oldVal)
+				{
+					(params.*memberPtr).present = true;
+					(params.*memberPtr).value = val;
+				}
+			}
+		);
+	}
+
+	{
+		auto w = rmsDifferenceLineEdit;
+		auto en = errorCriterion;
+		auto memberPtr = &P::rmsDiff;
+		auto oldVal = w->text();
+		l << vb::Setter<P>(
+			[memberPtr, w, en](const P& params)
+			{
+				if((params.*memberPtr).present)
+				{
+					en->setChecked(true);
+					w->setText(QString::number((params.*memberPtr).value));
+				}
+			},
+			[memberPtr, w, oldVal](P& params)
+			{   
+				auto val = w->text();
+				if(val != oldVal)
+				{
+					(params.*memberPtr).present = true;
+					(params.*memberPtr).value = val.toDouble();
+				}
+			}
+		);
+	}
+
+	vb::addSetter(l, &P::adjustScale, adjustScaleCheckBox);
+	vb::addSetter(l, &P::randomSamplingLimit, randomSamplingLimitSpinBox);
+	vb::addSetter(l, &P::rotation, rotComboBox);
+	vb::addSetter(l, &P::tX, TxCheckBox);
+	vb::addSetter(l, &P::tY, TyCheckBox);
+	vb::addSetter(l, &P::tZ, TzCheckBox);
+	vb::addSetter(l, &P::enableFPR, pointsRemoval);
+	vb::addSetter(l, &P::finalOverlap, overlapSpinBox);
+
+	for(auto& s : l) s(p);
+}

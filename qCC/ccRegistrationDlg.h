@@ -25,6 +25,7 @@
 
 #include <ui_registrationDlg.h>
 #include <ReferenceCloud.h>
+#include <advapi/RegisterParams.h>
 
 class ccHObject;
 
@@ -110,6 +111,8 @@ public:
 
 	//! Saves parameters for next call
 	void saveParameters() const;
+
+	void apply(const advapi::RegisterParams&);
 
 protected:
 	void swapModelAndData();

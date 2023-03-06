@@ -155,6 +155,8 @@
 #include <random>
 
 #include "ccScopeGuard.h"
+#include <advapi/ComputeKdTreeParams.h>
+#include <advapi/ComputeMeshParams.h>
 
 #define ACTION_GUARD(x) Q_EMIT m_advancedAPI.actionTriggered(x); ccScopeGuard cc_sg([this](){ m_advancedAPI.triggerActionFinished(x); })
 
@@ -929,6 +931,7 @@ void MainWindow::doActionComputeKdTree()
 		if (lockedVertices)
 		{
 			ccUtils::DisplayLockedVerticesWarning(ent->getName(), true);
+			m_advancedAPI.triggerActionFailed("ComputeKdTree", "Locked vertices!");
 			return;
 		}
 	}
@@ -936,14 +939,26 @@ void MainWindow::doActionComputeKdTree()
 	if (!cloud)
 	{
 		ccLog::Error(tr("Selected one and only one point cloud or mesh!"));
+		m_advancedAPI.triggerActionFailed("ComputeKdTree", "Selected one and only one point cloud or mesh!");
 		return;
 	}
 
-	bool ok;
-	s_kdTreeMaxErrorPerCell = QInputDialog::getDouble(this, tr("Compute Kd-tree"), tr("Max error per leaf cell:"), s_kdTreeMaxErrorPerCell, 1.0e-6, 1.0e6, 6, &ok);
-	if (!ok)
-		return;
+	auto params = m_advancedAPI.params<advapi::ComputeKdTreeParams>("ComputeKdTree");
+	bool _auto = false;
+	if(params)
+	{
+		_auto = params->isAuto();
+		if(params->value.leaf.present)
+			s_kdTreeMaxErrorPerCell = params->value.leaf.value;
+	}
 
+	if(!_auto)
+	{
+		bool ok;
+		s_kdTreeMaxErrorPerCell = QInputDialog::getDouble(this, tr("Compute Kd-tree"), tr("Max error per leaf cell:"), s_kdTreeMaxErrorPerCell, 1.0e-6, 1.0e6, 6, &ok);
+		if (!ok)
+			return;
+	}
 	ccProgressDialog pDlg(true, this);
 
 	//computation
@@ -977,6 +992,7 @@ void MainWindow::doActionComputeKdTree()
 		ccLog::Error(tr("An error occurred"));
 		delete kdtree;
 		kdtree = nullptr;
+		m_advancedAPI.triggerActionFailed("ComputeKdTree", "An error occured");
 	}
 }
 
@@ -984,8 +1000,10 @@ void MainWindow::doActionComputeOctree()
 {
 	ACTION_GUARD("ComputeOctree");
 	if ( !ccEntityAction::computeOctree(m_selectedEntities, this) )
+	{
+		m_advancedAPI.triggerActionFailed("ComputeOctree", "An error occured");
 		return;
-
+	}
 	refreshAll();
 	updateUI();
 }
@@ -3662,7 +3680,12 @@ void MainWindow::doActionRegister()
 	}
 
 	ccRegistrationDlg rDlg(data, model, this);
-	if (!rDlg.exec())
+
+	auto params = m_advancedAPI.params<advapi::RegisterParams>("Register");
+	if(params)
+		rDlg.apply(params->value);
+	
+	if((!params || !params->isAuto()) && !rDlg.exec())
 	{
 		m_advancedAPI.triggerActionCanceled("Register");
 		return;
@@ -3904,11 +3927,17 @@ void MainWindow::doAction4pcsRegister()
 	ccGenericPointCloud* data = ccHObjectCaster::ToGenericPointCloud(m_selectedEntities[1]);
 
 	ccAlignDlg aDlg(model, data);
-	if (!aDlg.exec())
+	
+	auto params = m_advancedAPI.params<advapi::_4pcsRegisterParams>("4pcsRegister");
+	if(params)
+		aDlg.apply(params->value);
+	
+	if((!params || !params->isAuto()) && !aDlg.exec())
 	{
 		m_advancedAPI.triggerActionCanceled("4pcsRegister");
 		return;
 	}
+
 	// model = aDlg.getModelObject();
 	data = aDlg.getDataObject();
 
@@ -4839,13 +4868,29 @@ void MainWindow::doActionComputeMeshLS() //
 
 void MainWindow::doActionComputeMesh(CCCoreLib::TRIANGULATION_TYPES type)
 {
+
+	const char* action = type == CCCoreLib::DELAUNAY_2D_AXIS_ALIGNED ? "ComputeMeshAA" : "ComputeMeshLS";
 	//ask the user for the max edge length
 	static double s_meshMaxEdgeLength = 0.0;
+
+	auto params = m_advancedAPI.params<advapi::ComputeMeshParams>(action);
+	bool _auto = false;
+	if(params)
+	{
+		_auto = params->isAuto();
+		if(params->value.edge.present)
+			s_meshMaxEdgeLength = params->value.edge.value;
+	}
+
+	if(!_auto)
 	{
 		bool ok = true;
 		double maxEdgeLength = QInputDialog::getDouble(this, tr("Triangulate"), tr("Max edge length (0 = no limit)"), s_meshMaxEdgeLength, 0, 1.0e9, 8, &ok);
 		if (!ok)
+		{
+			m_advancedAPI.triggerActionFailed(action, "An error occured");
 			return;
+		}
 		s_meshMaxEdgeLength = maxEdgeLength;
 	}
 
@@ -4919,6 +4964,7 @@ void MainWindow::doActionComputeMesh(CCCoreLib::TRIANGULATION_TYPES type)
 	if (errors)
 	{
 		ccConsole::Error(tr("Error(s) occurred! See the Console messages"));
+		m_advancedAPI.triggerActionFailed(action, "An error occured");
 	}
 
 	refreshAll();

@@ -4,6 +4,7 @@
 #include <type_traits>
 #include <QVector>
 #include <typeinfo>
+#include <functional>
 namespace vb
 {
     // Just an empty base class to use dynamic casts

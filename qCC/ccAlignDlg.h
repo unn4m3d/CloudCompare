@@ -19,6 +19,7 @@
 #define CC_ALIGN_DLG_HEADER
 
 #include <QDialog>
+#include <advapi/4pcsRegisterParams.h>
 
 class ccGenericPointCloud;
 
@@ -56,6 +57,8 @@ public:
 	unsigned getMaxNumberOfCandidates();
 	CCCoreLib::ReferenceCloud *getSampledModel();
 	CCCoreLib::ReferenceCloud *getSampledData();
+
+	void apply(const advapi::_4pcsRegisterParams&);
 
 protected:
 	void swapModelAndData();

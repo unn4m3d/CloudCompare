@@ -525,3 +525,45 @@ void ccAlignDlg::toggleNbMaxCandidates(bool activ)
 {
 	m_ui->nbMaxCandidates->setEnabled(activ);
 }
+
+void ccAlignDlg::apply(const advapi::_4pcsRegisterParams& p)
+{
+	using P = advapi::_4pcsRegisterParams;
+
+	vb::SetterList<P> l;
+
+	vb::addSetter(l, &P::nTrials, m_ui->nbTries);
+	vb::addSetter(l, &P::overlap, m_ui->overlap);
+
+	{
+		auto w = m_ui->nbMaxCandidates;
+		auto en = m_ui->isNbCandLimited;
+		auto memberPtr = &P::nMaxCandidates;
+		auto oldVal = w->value();
+		l << vb::Setter<P>(
+			[memberPtr, w, en](const P& params)
+			{
+				if((params.*memberPtr).present)
+				{
+					en->setChecked(true);
+					w->setValue((params.*memberPtr).value);
+				}
+			},
+			[memberPtr, w, oldVal](P& params)
+			{   
+				auto val = w->value();
+				if(val != oldVal)
+				{
+					(params.*memberPtr).present = true;
+					(params.*memberPtr).value = val;
+				}
+			}
+		);
+	}
+
+	vb::addSetter(l, &P::samplingMethod, m_ui->samplingMethod);
+	vb::addSetter(l, &P::dataSamplingRate, m_ui->dataSamplingRate);
+	vb::addSetter(l, &P::modelSamplingRate, m_ui->modelSamplingRate);
+
+	for(auto& s : l) s(p);
+}
