@@ -23,6 +23,9 @@ namespace vb
 
         virtual ~Serializable(){}
 
+        Serializable() : value(){}
+        Serializable(const T& v) : value(v){}
+
         virtual bool isAuto() const;
     };
 
