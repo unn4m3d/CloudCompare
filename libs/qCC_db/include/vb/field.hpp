@@ -36,7 +36,6 @@ namespace vb
         bool present;
 
         operator T&() { return value; }
-        operator T() { return value; }
 
         Field() : present(false){}
     };
