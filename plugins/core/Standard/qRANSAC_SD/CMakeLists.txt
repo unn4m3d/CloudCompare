@@ -5,6 +5,8 @@ if( PLUGIN_STANDARD_QRANSAC_SD )
 
 	AddPlugin( NAME ${PROJECT_NAME} )
 
+	set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 11)
+
 	add_subdirectory( extern/RANSAC_SD EXCLUDE_FROM_ALL )
 	add_subdirectory( include )
 	add_subdirectory( src )

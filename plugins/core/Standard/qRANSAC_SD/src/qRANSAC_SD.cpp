@@ -219,10 +219,19 @@ void qRansacSD::doAction()
 	rsdDlg.maxTorusMinorRadiusdoubleSpinBox->setValue(s_maxTorusMinorRadius);
 	rsdDlg.maxTorusMajorRadiusdoubleSpinBox->setValue(s_maxTorusMajorRadius);
 	rsdDlg.randomColorcheckBox->setChecked(s_randomColor);
-	if (!rsdDlg.exec())
+	
+	auto api = getMainAppInterface()->getAdvancedAPI();
+	auto action_id = QString("%1/%2").arg(IID()).arg(getName());
+	auto _params = api->params<advapi::RANSACParams>(action_id);
+
+	if(_params)
+		rsdDlg.apply(_params->value);
+
+	if ((!_params || ! _params->isAuto()) && !rsdDlg.exec())
 	{
-		return;
+		return ;
 	}
+
 	s_minSphereRadiusEnabled = rsdDlg.minSphereRadiuscheckBox->isChecked();
 	s_maxSphereRadiusEnabled = rsdDlg.maxSphereRadiuscheckBox->isChecked();
 	s_minCylinderRadiusEnabled = rsdDlg.minCylinderRadiuscheckBox->isChecked();

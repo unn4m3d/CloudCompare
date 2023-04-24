@@ -29,8 +29,8 @@ MLSDialog::MLSDialog(QWidget* parent)
 
 	updateCombo();
 
-	connect (upsampling_method, SIGNAL(currentIndexChanged(QString)), this, SLOT(activateMenu(QString)) );
-	connect (search_radius,     SIGNAL(valueChanged(double)),         this, SLOT(updateSquaredGaussian(double)) );
+	connect (upsampling_method, &QComboBox::currentTextChanged, this, &MLSDialog::activateMenu );
+	connect (search_radius,     QOverload<double>::of(&QDoubleSpinBox::valueChanged),         this, &MLSDialog::updateSquaredGaussian );
 
 	deactivateAllMethods();
 }

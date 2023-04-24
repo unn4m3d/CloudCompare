@@ -19,6 +19,7 @@
 #define CC_RANSAC_SD_DLG_HEADER
 
 #include "ui_ransacSDDlg.h"
+#include "RANSACParams.hpp"
 
 //! Dialog for qRansacSD plugin
 class ccRansacSDDlg : public QDialog, public Ui::RansacSDDialog
@@ -29,6 +30,8 @@ public:
 
 	//! Default constructor
 	explicit ccRansacSDDlg(QWidget* parent = nullptr);
+
+	void apply(const advapi::RANSACParams&);
 
 protected:
 

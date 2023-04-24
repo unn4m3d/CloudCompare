@@ -31,13 +31,13 @@ public:
 	explicit MLSDialog(QWidget* parent = nullptr);
 
 protected:
-	void activateMenu(QString name);
-	void toggleMethods(bool status);
-	void updateSquaredGaussian(double radius);
+	Q_SLOT void activateMenu(QString name);
+	Q_SLOT void toggleMethods(bool status);
+	Q_SLOT void updateSquaredGaussian(double radius);
 
 protected:
-	void updateCombo();
-	void deactivateAllMethods();
+	Q_SLOT void updateCombo();
+	Q_SLOT void deactivateAllMethods();
 };
 
 #endif // MLSDIALOG_H

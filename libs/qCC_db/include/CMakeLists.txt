@@ -84,6 +84,8 @@ target_sources( ${PROJECT_NAME}
 		${CMAKE_CURRENT_LIST_DIR}/vb/field.hpp
 		${CMAKE_CURRENT_LIST_DIR}/vb/field_traits.hpp
 		${CMAKE_CURRENT_LIST_DIR}/vb/nameof.hpp
+		${CMAKE_CURRENT_LIST_DIR}/vb/field_misc.hpp
+		${CMAKE_CURRENT_LIST_DIR}/vb/settings.hpp
 )
 
 target_include_directories( ${PROJECT_NAME}

@@ -6,8 +6,6 @@
 
 namespace vb
 {
-    extern QSettings settings;
-
     namespace detail
     {
         template<typename T>

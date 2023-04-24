@@ -65,4 +65,5 @@ target_sources( ${PROJECT_NAME}
 	    ${CMAKE_CURRENT_LIST_DIR}/ccViewportParameters.cpp
 	    ${CMAKE_CURRENT_LIST_DIR}/ccWaveform.cpp
 		${CMAKE_CURRENT_LIST_DIR}/ccGLMatrix.cpp
+		${CMAKE_CURRENT_LIST_DIR}/vb/settings.cpp
 )

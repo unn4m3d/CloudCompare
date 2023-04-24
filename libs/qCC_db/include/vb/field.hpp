@@ -1,6 +1,7 @@
 #pragma once
 #include <functional>
 #include <QWidget>
+#include <QCheckBox>
 #include <type_traits>
 #include <QVector>
 #include <typeinfo>
@@ -160,6 +161,23 @@ namespace vb
     void addSetter(SetterList<P>& l, Member P::* memberPtr, Widget* w)
     {
         detail::addSetter<P, Member, Widget>(l, memberPtr, w);
+    }
+
+    template<typename P, typename Member>
+    void addEnabledCondition(SetterList<P>& l, Member P::* memberPtr, QCheckBox* enab)
+    {
+        l << Setter<P>
+        (
+            [memberPtr, enab](const P& params)
+            {
+                if((params.*memberPtr).present)
+                    enab->setChecked(true);
+            },
+            [memberPtr, enab](P& params)
+            {
+                (params.*memberPtr).present = enab->isChecked();
+            }   
+        );
     }
 
     template<typename T>

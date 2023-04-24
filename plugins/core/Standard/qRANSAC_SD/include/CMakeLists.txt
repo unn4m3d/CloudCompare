@@ -4,6 +4,7 @@ target_sources( ${PROJECT_NAME}
 		${CMAKE_CURRENT_LIST_DIR}/ccRansacSDDlg.h
 		${CMAKE_CURRENT_LIST_DIR}/qRANSAC_SD_Commands.h
 		${CMAKE_CURRENT_LIST_DIR}/qRANSAC_SD.h
+		${CMAKE_CURRENT_LIST_DIR}/RANSACParams.hpp
 )
 
 target_include_directories( ${PROJECT_NAME}
