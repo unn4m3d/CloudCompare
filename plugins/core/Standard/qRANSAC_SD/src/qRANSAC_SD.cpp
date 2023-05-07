@@ -105,7 +105,7 @@ void qRansacSD::registerCommands(ccCommandLineInterface* cmd)
 	cmd->registerCommand(ccCommandLineInterface::Command::Shared(new CommandRANSAC));
 }
 
-static MiscLib::Vector< std::pair< MiscLib::RefCountPtr< PrimitiveShape >, size_t > >* s_shapes; // stores the detected shapes
+static std::vector< std::pair< MiscLib::RefCountPtr< PrimitiveShape >, size_t > >* s_shapes; // stores the detected shapes
 static size_t s_remainingPoints = 0;
 static RansacShapeDetector* s_detector = 0;
 static PointCloud* s_cloud = 0;
@@ -219,19 +219,10 @@ void qRansacSD::doAction()
 	rsdDlg.maxTorusMinorRadiusdoubleSpinBox->setValue(s_maxTorusMinorRadius);
 	rsdDlg.maxTorusMajorRadiusdoubleSpinBox->setValue(s_maxTorusMajorRadius);
 	rsdDlg.randomColorcheckBox->setChecked(s_randomColor);
-	
-	auto api = getMainAppInterface()->getAdvancedAPI();
-	auto action_id = QString("%1/%2").arg(IID()).arg(getName());
-	auto _params = api->params<advapi::RANSACParams>(action_id);
-
-	if(_params)
-		rsdDlg.apply(_params->value);
-
-	if ((!_params || ! _params->isAuto()) && !rsdDlg.exec())
+	if (!rsdDlg.exec())
 	{
-		return ;
+		return;
 	}
-
 	s_minSphereRadiusEnabled = rsdDlg.minSphereRadiuscheckBox->isChecked();
 	s_maxSphereRadiusEnabled = rsdDlg.maxSphereRadiuscheckBox->isChecked();
 	s_minCylinderRadiusEnabled = rsdDlg.minCylinderRadiuscheckBox->isChecked();
@@ -482,7 +473,7 @@ ccHObject* qRansacSD::executeRANSAC(ccPointCloud* ccPC, const RansacParams& para
 
 	unsigned remaining = count;
 	typedef std::pair< MiscLib::RefCountPtr< PrimitiveShape >, size_t > DetectedShape;
-	MiscLib::Vector< DetectedShape > shapes; // stores the detected shapes
+	std::vector< DetectedShape > shapes; // stores the detected shapes
 
 	// run detection
 	// returns number of unassigned points
@@ -585,7 +576,7 @@ ccHObject* qRansacSD::executeRANSAC(ccPointCloud* ccPC, const RansacParams& para
 		unsigned coneCount = 1;
 		unsigned torusCount = 1;
 		ccHObject* group = nullptr;
-		for (MiscLib::Vector<DetectedShape>::const_iterator it = shapes.begin(); it != shapes.end(); ++it)
+		for (std::vector<DetectedShape>::const_iterator it = shapes.begin(); it != shapes.end(); ++it)
 		{
 			const PrimitiveShape* shape = it->first;
 			unsigned shapePointsCount = static_cast<unsigned>(it->second);

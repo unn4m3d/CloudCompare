@@ -428,6 +428,7 @@
      <addaction name="actionMatchBBCenters"/>
      <addaction name="actionMatchScales"/>
      <addaction name="actionPointPairsAlign"/>
+     <addaction name="actionAlign"/>
      <addaction name="actionRegister"/>
      <addaction name="separator"/>
      <addaction name="actionBBCenterToOrigin"/>
