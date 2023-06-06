@@ -19,6 +19,7 @@ target_compile_definitions( ${PROJECT_NAME}
 		$<$<CONFIG:Release>:TIMINGLEVEL1>
 )
 
+add_definitions(-fsanitize=address -fsanitize=undefined -fsanitize=leak)
 # Apparently building with OpenMP is broken on Ubuntu
 # DGM: OpenMP doesn't work with MSVC (the process loops infinitely)
 #if( NOT WIN32 )
@@ -102,3 +103,5 @@ target_include_directories( ${PROJECT_NAME}
 	PUBLIC
 		${CMAKE_CURRENT_SOURCE_DIR}
 )
+
+target_link_libraries(${PROJECT_NAME} ubsan asan)
