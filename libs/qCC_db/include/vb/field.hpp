@@ -37,6 +37,7 @@ namespace vb
         bool present;
 
         operator T&() { return value; }
+        operator const T&() const { return value; }
 
         Field() : present(false){}
     };
@@ -88,11 +89,8 @@ namespace vb
                 [memberPtr, w, oldVal](P& params)
                 {   
                     auto val = w->value();
-                    if(val != oldVal)
-                    {
-                        (params.*memberPtr).present = true;
-                        (params.*memberPtr).value = val;
-                    }
+                    (params.*memberPtr).present = val != oldVal;
+                    (params.*memberPtr).value = val;
                 }
             );
         }
@@ -111,11 +109,8 @@ namespace vb
                 [memberPtr, w, oldVal](P& params)
                 {   
                     auto val = w->isChecked();
-                    if(val != oldVal)
-                    {
-                        (params.*memberPtr).present = true;
-                        (params.*memberPtr).value = val;
-                    }
+                    (params.*memberPtr).present = val != oldVal;
+                    (params.*memberPtr).value = val;
                 }
             );
         }
@@ -134,11 +129,8 @@ namespace vb
                 [memberPtr, w, oldVal](P& params)
                 {   
                     auto val = w->currentIndex();
-                    if(val != oldVal)
-                    {
-                        (params.*memberPtr).present = true;
-                        (params.*memberPtr).value = val;
-                    }
+                    (params.*memberPtr).present = val != oldVal;
+                    (params.*memberPtr).value = val;
                 }
             );
         }
