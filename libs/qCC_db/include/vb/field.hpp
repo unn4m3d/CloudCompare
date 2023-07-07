@@ -135,6 +135,26 @@ namespace vb
             );
         }
 
+        template<typename P, typename Member, typename Widget>
+        static void addSetter(SetterList<P>& l, Member P::* memberPtr, Widget* w)
+            requires requires(Widget w){ w.setPlainText(""); }
+        {
+            auto oldVal = w->toPlainText();
+            l << Setter<P>(
+                [memberPtr, w](const P& params)
+                {
+                    if((params.*memberPtr).present)
+                        w->setPlainText((params.*memberPtr).value);
+                },
+                [memberPtr, w, oldVal](P& params)
+                {   
+                    auto val = w->toPlainText();
+                    (params.*memberPtr).present = val != oldVal;
+                    (params.*memberPtr).value = val;
+                }
+            );
+        }
+
         template<typename T>
         static bool isAuto(const T& value)
         requires requires(T x){ x._auto; }

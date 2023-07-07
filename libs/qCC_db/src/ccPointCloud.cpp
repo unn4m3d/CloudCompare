@@ -55,6 +55,7 @@
 //system
 #include <cassert>
 #include <queue>
+#include <algorithm>
 
 static const char s_deviationSFName[] = "Deviation";
 
@@ -594,7 +595,7 @@ const ccPointCloud& ccPointCloud::append(ccPointCloud* addedCloud, unsigned poin
 			//we import colors (if necessary)
 			if (hasColors() && m_rgbaColors->currentSize() == pointCountBefore)
 			{
-				for (unsigned i = 0; i < addedPoints; i++)
+				for (unsigned i = 0; i < std::min((long unsigned)addedPoints, addedCloud->m_rgbaColors->size()); i++)
 				{
 					addColor(addedCloud->m_rgbaColors->getValue(i));
 				}
