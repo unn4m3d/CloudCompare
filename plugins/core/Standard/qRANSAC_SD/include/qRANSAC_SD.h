@@ -19,6 +19,7 @@
 #define Q_RANSAC_SD_PLUGIN_HEADER
 
 #include "ccStdPluginInterface.h"
+#include "ccAdvancedAPI.h"
 
 
 //! Wrapper to Schnabel et al. library for automatic shape detection in point cloud

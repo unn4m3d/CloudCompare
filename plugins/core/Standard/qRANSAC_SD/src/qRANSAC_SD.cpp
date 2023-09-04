@@ -33,6 +33,7 @@
 
 //Dialog
 #include "ccRansacSDDlg.h"
+#include "RANSACParams.hpp"
 
 //Qt
 #include <QtGui>
@@ -157,11 +158,17 @@ void qRansacSD::doAction()
 	if (!m_app)
 		return;
 
+	auto advapi = getMainAppInterface()->getAdvancedAPI();
+	auto actionName = QString("%1/%2").arg(IID()).arg(getName());
+
+    Q_EMIT advapi->actionTriggered(actionName);
+
 	const ccHObject::Container& selectedEntities = m_app->getSelectedEntities();
 	size_t selNum = selectedEntities.size();
 	if (selNum != 1)
 	{
 		ccLog::Error("[qRansacSD] Select only one cloud!");
+		Q_EMIT advapi->actionCanceled(actionName);
 		return;
 	}
 
@@ -170,6 +177,7 @@ void qRansacSD::doAction()
 	if (!ent || !ent->isA(CC_TYPES::POINT_CLOUD))
 	{
 		ccLog::Error("[qRansacSD] Select a real point cloud!");
+		Q_EMIT advapi->actionCanceled(actionName);
 		return;
 	}
 
@@ -219,10 +227,17 @@ void qRansacSD::doAction()
 	rsdDlg.maxTorusMinorRadiusdoubleSpinBox->setValue(s_maxTorusMinorRadius);
 	rsdDlg.maxTorusMajorRadiusdoubleSpinBox->setValue(s_maxTorusMajorRadius);
 	rsdDlg.randomColorcheckBox->setChecked(s_randomColor);
-	if (!rsdDlg.exec())
+	auto _params = advapi->params<advapi::RANSACParams>(actionName);
+
+    if(_params)
+        rsdDlg.apply(_params->value);
+    
+    if ((!_params || !_params->isAuto()) && !rsdDlg.exec())
 	{
+		advapi->triggerActionCanceled(actionName);
 		return;
 	}
+
 	s_minSphereRadiusEnabled = rsdDlg.minSphereRadiuscheckBox->isChecked();
 	s_maxSphereRadiusEnabled = rsdDlg.maxSphereRadiuscheckBox->isChecked();
 	s_minCylinderRadiusEnabled = rsdDlg.minCylinderRadiuscheckBox->isChecked();
@@ -314,8 +329,14 @@ void qRansacSD::doAction()
 
 	if (group)
 	{
+
+		Q_EMIT advapi->actionFinished(actionName);
 		m_app->addToDB(group);
 		m_app->refreshAll();
+	}
+	else
+	{
+		Q_EMIT advapi->actionFailed(actionName, "Oops!");
 	}
 }
 
