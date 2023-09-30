@@ -157,6 +157,7 @@
 #include "ccScopeGuard.h"
 #include <advapi/ComputeKdTreeParams.h>
 #include <advapi/ComputeMeshParams.h>
+#include <advapi/MergeParams.h>
 
 #define ACTION_GUARD(x) Q_EMIT m_advancedAPI.actionTriggered(x); ccScopeGuard cc_sg([this](){ m_advancedAPI.triggerActionFinished(x); })
 
@@ -3518,7 +3519,19 @@ void MainWindow::doActionMerge()
 				//'severe' modifications (octree deletion, etc.) --> see ccPointCloud::operator +=
 				firstCloudContext = removeObjectTemporarilyFromDBTree(firstCloud);
 
-				if (QMessageBox::question(this, tr("Original cloud index"), tr("Do you want to generate a scalar field with the original cloud index?")) == QMessageBox::Yes)
+				auto params = m_advancedAPI.params<advapi::MergeParams>("Merge");
+
+				auto answer = QMessageBox::No;
+
+				if(params->isAuto())
+				{
+					if(params->value.generateIndex)
+						answer = QMessageBox::Yes;
+				}
+				else
+					answer = QMessageBox::question(this, tr("Original cloud index"), tr("Do you want to generate a scalar field with the original cloud index?"));
+
+				if (answer == QMessageBox::Yes)
 				{
 					int sfIdx = pc->getScalarFieldIndexByName(CC_ORIGINAL_CLOUD_INDEX_SF_NAME);
 					if (sfIdx < 0)
@@ -11404,10 +11417,13 @@ void MainWindow::doActionComparePlanes()
 	forceConsoleDisplay();
 }
 
-void MainWindow::select(const std::unordered_set<int>& indices)
+void MainWindow::select(const std::vector<ccHObject*>& entities)
 {
 	ACTION_GUARD("Select");
-	m_ccRoot->selectEntities(indices);
+	//m_ccRoot->selectEntities(indices);
+	m_ccRoot->unselectAllEntities();
+	for(auto obj : entities)
+		m_ccRoot->selectEntity(obj, true);
 }
 
 ccPluginInterface* MainWindow::getPluginByIID(const QString& iid)

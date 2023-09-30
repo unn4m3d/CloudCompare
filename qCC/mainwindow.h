@@ -176,7 +176,7 @@ public:
 		return &m_advancedAPI;
 	}
 
-	void select(const std::unordered_set<int>&) override;
+	void select(const std::vector<ccHObject*>&) override;
 	ccPluginInterface* getPluginByIID(const QString& iid) override;
 	
 private:

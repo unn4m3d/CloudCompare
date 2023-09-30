@@ -223,7 +223,7 @@ public:
 	virtual ccAdvancedAPI* getAdvancedAPI() = 0;
 	virtual ccPluginInterface* getPluginByIID(const QString& iid) = 0;
 
-	virtual void select(const std::unordered_set<int>& indices) = 0;
+	virtual void select(const std::vector<ccHObject*>& indices) = 0;
 };
 
 #endif //CC_MAIN_APP_INTERFACE_HEADER

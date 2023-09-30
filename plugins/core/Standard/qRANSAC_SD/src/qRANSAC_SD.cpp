@@ -928,6 +928,7 @@ ccHObject* qRansacSD::executeRANSAC(ccPointCloud* ccPC, const RansacParams& para
 
 			group->setVisible(true);
 			group->setDisplay_recursive(ccPC->getDisplay());
+			group->setMetaData("vb::Role", "ransac_shapes");
 #ifdef POINTSWITHINDEX
 			if (params.createCloudFromLeftOverPoints)
 			{
