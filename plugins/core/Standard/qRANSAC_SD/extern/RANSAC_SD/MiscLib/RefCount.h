@@ -46,6 +46,7 @@ namespace MiscLib
 		if(m_refCount == 1)
 		{
 #ifdef DOPARALLEL
+			#warning Doparallel
 			#pragma omp critical
 #endif
 			{

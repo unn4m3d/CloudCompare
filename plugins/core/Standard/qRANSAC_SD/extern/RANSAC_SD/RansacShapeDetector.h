@@ -41,7 +41,7 @@ class DLL_LINKAGE RansacShapeDetector
 		virtual ~RansacShapeDetector();
 		void Add(PrimitiveShapeConstructor *c);
 		size_t Detect(PointCloud &pc, size_t begin, size_t end,
-			std::vector< std::pair< MiscLib::RefCountPtr< PrimitiveShape >, size_t > > *shapes);
+			std::vector< std::pair< std::shared_ptr< PrimitiveShape >, size_t > > *shapes);
 		void AutoAcceptSize(size_t s) { m_autoAcceptSize = s; }
 		size_t AutoAcceptSize() const { return m_autoAcceptSize; }
 		const Options &GetOptions() const { return m_options; }
@@ -54,7 +54,7 @@ class DLL_LINKAGE RansacShapeDetector
 			const std::vector< int > &shapeIndex,
 			std::vector< size_t > *samples,
 			const IndexedOctreeType::CellType **node) const;
-		PrimitiveShape *Fit(bool allowDifferentShapes,
+			std::shared_ptr<PrimitiveShape> Fit(bool allowDifferentShapes,
 			const PrimitiveShape &initialShape, const PointCloud &pc,
 			std::vector< size_t >::const_iterator begin,
 			std::vector< size_t >::const_iterator end,

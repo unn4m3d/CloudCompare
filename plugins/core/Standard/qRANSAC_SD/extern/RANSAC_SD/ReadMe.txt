@@ -89,7 +89,7 @@ detector.Add(new CylinderPrimitiveShapeConstructor());
 detector.Add(new ConePrimitiveShapeConstructor());
 detector.Add(new TorusPrimitiveShapeConstructor());
 
-MiscLib::Vector< std::pair< MiscLib::RefCountPtr< PrimitiveShape >, size_t > > shapes; // stores the detected shapes
+MiscLib::Vector< std::pair< std::shared_ptr< PrimitiveShape >, size_t > > shapes; // stores the detected shapes
 size_t remaining = detector.Detect(pc, 0, pc.size(), &shapes); // run detection
 	// returns number of unassigned points
 	// the array shapes is filled with pointers to the detected shapes

@@ -168,7 +168,7 @@ void TorusPrimitiveShape::Visit(PrimitiveShapeVisitor *visitor) const
 
 void TorusPrimitiveShape::SuggestSimplifications(const PointCloud &pc,
 	float distThresh,
-	std::vector< MiscLib::RefCountPtr< PrimitiveShape > > *suggestions) const
+	std::vector< std::shared_ptr< PrimitiveShape > > *suggestions) const
 {
 	// sample the bounding box in parameter space at 25 locations
 	// these points are used to estimate the other shapes
@@ -222,8 +222,8 @@ void TorusPrimitiveShape::SuggestSimplifications(const PointCloud &pc,
 			if (sum < bestSum)
 			{
 				bestSum = sum;
-				suggestions->push_back(new ConePrimitiveShape(cone));
-				suggestions->back()->Release();
+				suggestions->push_back(std::make_shared<ConePrimitiveShape>(cone));
+				//suggestions->back()->Release();
 			}
 		}
 	}
@@ -248,8 +248,8 @@ void TorusPrimitiveShape::SuggestSimplifications(const PointCloud &pc,
 			if (sum < bestSum)
 			{
 				bestSum = sum;
-				suggestions->push_back(new CylinderPrimitiveShape(cylinder));
-				suggestions->back()->Release();
+				suggestions->push_back(std::make_shared<CylinderPrimitiveShape>(cylinder));
+				//suggestions->back()->Release();
 			}
 		}
 	}
@@ -274,8 +274,8 @@ void TorusPrimitiveShape::SuggestSimplifications(const PointCloud &pc,
 			if (sum < bestSum)
 			{
 				bestSum = sum;
-				suggestions->push_back(new SpherePrimitiveShape(sphere));
-				suggestions->back()->Release();
+				suggestions->push_back(std::make_shared<SpherePrimitiveShape>(sphere));
+				//suggestions->back()->Release();
 			}
 		}
 	}
@@ -299,8 +299,8 @@ void TorusPrimitiveShape::SuggestSimplifications(const PointCloud &pc,
 			if (sum < bestSum)
 			{
 				bestSum = sum;
-				suggestions->push_back(new PlanePrimitiveShape(plane));
-				suggestions->back()->Release();
+				suggestions->push_back(std::make_shared<PlanePrimitiveShape>(plane));
+				//suggestions->back()->Release();
 			}
 		}
 	}

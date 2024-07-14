@@ -1,5 +1,7 @@
 #ifndef MiscLib__REFCOUNTPTR_HEADER__
 #define MiscLib__REFCOUNTPTR_HEADER__
+#include <memory>
+
 
 namespace MiscLib
 {

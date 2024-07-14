@@ -106,7 +106,7 @@ void qRansacSD::registerCommands(ccCommandLineInterface* cmd)
 	cmd->registerCommand(ccCommandLineInterface::Command::Shared(new CommandRANSAC));
 }
 
-static std::vector< std::pair< MiscLib::RefCountPtr< PrimitiveShape >, size_t > >* s_shapes; // stores the detected shapes
+static std::vector< std::pair< std::shared_ptr< PrimitiveShape >, size_t > >* s_shapes; // stores the detected shapes
 static size_t s_remainingPoints = 0;
 static RansacShapeDetector* s_detector = 0;
 static PointCloud* s_cloud = 0;
@@ -493,7 +493,7 @@ ccHObject* qRansacSD::executeRANSAC(ccPointCloud* ccPC, const RansacParams& para
 
 
 	unsigned remaining = count;
-	typedef std::pair< MiscLib::RefCountPtr< PrimitiveShape >, size_t > DetectedShape;
+	typedef std::pair< std::shared_ptr< PrimitiveShape >, size_t > DetectedShape;
 	std::vector< DetectedShape > shapes; // stores the detected shapes
 
 	// run detection
@@ -599,7 +599,7 @@ ccHObject* qRansacSD::executeRANSAC(ccPointCloud* ccPC, const RansacParams& para
 		ccHObject* group = nullptr;
 		for (std::vector<DetectedShape>::const_iterator it = shapes.begin(); it != shapes.end(); ++it)
 		{
-			const PrimitiveShape* shape = it->first;
+			auto shape = it->first;
 			unsigned shapePointsCount = static_cast<unsigned>(it->second);
 
 			//too many points?!
@@ -690,7 +690,7 @@ ccHObject* qRansacSD::executeRANSAC(ccPointCloud* ccPC, const RansacParams& para
 			{
 			case RPT_PLANE: //plane
 			{
-				const PlanePrimitiveShape* plane = static_cast<const PlanePrimitiveShape*>(shape);
+				auto plane = std::dynamic_pointer_cast<PlanePrimitiveShape>(shape);
 				Vec3f G = plane->Internal().getPosition();
 				Vec3f N = plane->Internal().getNormal();
 				Vec3f X = plane->getXDim();
@@ -749,7 +749,7 @@ ccHObject* qRansacSD::executeRANSAC(ccPointCloud* ccPC, const RansacParams& para
 
 			case RPT_SPHERE: //sphere
 			{
-				const SpherePrimitiveShape* sphere = static_cast<const SpherePrimitiveShape*>(shape);
+				auto sphere = std::dynamic_pointer_cast<SpherePrimitiveShape>(shape);
 				float radius = sphere->Internal().Radius();
 				Vec3f CC = sphere->Internal().Center();
 
@@ -767,7 +767,7 @@ ccHObject* qRansacSD::executeRANSAC(ccPointCloud* ccPC, const RansacParams& para
 
 			case RPT_CYLINDER: //cylinder
 			{
-				const CylinderPrimitiveShape* cyl = static_cast<const CylinderPrimitiveShape*>(shape);
+				auto cyl = std::dynamic_pointer_cast<CylinderPrimitiveShape>(shape);
 				Vec3f G = cyl->Internal().AxisPosition();
 				Vec3f N = cyl->Internal().AxisDirection();
 				Vec3f X = cyl->Internal().AngularDirection();
@@ -795,7 +795,7 @@ ccHObject* qRansacSD::executeRANSAC(ccPointCloud* ccPC, const RansacParams& para
 
 			case RPT_CONE: //cone
 			{
-				const ConePrimitiveShape* cone = static_cast<const ConePrimitiveShape*>(shape);
+				auto cone = std::dynamic_pointer_cast<ConePrimitiveShape>(shape);
 				Vec3f CC = cone->Internal().Center();
 				Vec3f CA = cone->Internal().AxisDirection();
 				float alpha = cone->Internal().Angle();
@@ -858,7 +858,7 @@ ccHObject* qRansacSD::executeRANSAC(ccPointCloud* ccPC, const RansacParams& para
 
 			case RPT_TORUS: //torus
 			{
-				const TorusPrimitiveShape* torus = static_cast<const TorusPrimitiveShape*>(shape);
+				auto torus = std::dynamic_pointer_cast<TorusPrimitiveShape>(shape);
 				if (torus->Internal().IsAppleShaped())
 				{
 					ccLog::Warning("[qRansacSD] Apple-shaped torus are not handled by CloudCompare!");

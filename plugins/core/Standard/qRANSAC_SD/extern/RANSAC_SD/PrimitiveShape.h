@@ -29,9 +29,10 @@ class DLL_LINKAGE PrimitiveShapeVisitor;
  reduced)
 */
 class DLL_LINKAGE PrimitiveShape
-: public MiscLib::RefCount
+//: public MiscLib::RefCount
 {
 public:
+	virtual ~PrimitiveShape(){}
 	// returns a unique identifier of the shape type
 	virtual size_t Identifier() const = 0;
 	// returns the number of point samples required to uniquely determine a shape
@@ -91,7 +92,7 @@ public:
 	virtual void Visit(PrimitiveShapeVisitor *visitor) const = 0;
 	virtual void SuggestSimplifications(const PointCloud &pc,
 		float distThresh,
-		std::vector< MiscLib::RefCountPtr< PrimitiveShape > > *suggestions) const {}
+		std::vector< std::shared_ptr< PrimitiveShape > > *suggestions) const {}
 	virtual void OptimizeParametrization(const PointCloud &pc,
 		size_t begin, size_t end, float epsilon) {}
 	// gets the 2D parametrization coordinates of a point p in 3-space (it is projected first)

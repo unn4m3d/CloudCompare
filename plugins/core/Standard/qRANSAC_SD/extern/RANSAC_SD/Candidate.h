@@ -19,12 +19,12 @@ class DLL_LINKAGE Candidate
 public:
 	Candidate();
 	Candidate(PrimitiveShape *shape, size_t level);
-	PrimitiveShape *Shape() { return m_shape; }
-	void Shape(PrimitiveShape *shape) { m_shape = shape; }
+	std::shared_ptr<PrimitiveShape> Shape() { return m_shape; }
+	void Shape(std::shared_ptr<PrimitiveShape> shape) { m_shape = shape; }
 	float LowerBound() const { return m_lowerBound; }
 	float UpperBound() const { return m_upperBound; }
-	MiscLib::RefCounted< std::vector< size_t > > *Indices() { return m_indices; }
-	void Indices(MiscLib::RefCounted< std::vector< size_t > > *indices) { m_indices = indices; }
+	std::vector< size_t >* Indices() { return m_indices.get(); }
+	void Indices(std::vector< size_t >  *indices) { m_indices.reset(indices); }
 	size_t ComputedSubsets() const { return m_subset; }
 	float ExpectedValue() const { return (m_lowerBound + m_upperBound) / 2.f; }
 	void SetSubset(size_t subset) { m_subset = subset; }
@@ -78,11 +78,11 @@ private:
 	float GetPseudoVariance( const PointCloud &pc );
 
 private:
-	MiscLib::RefCountPtr< PrimitiveShape > m_shape;
+	std::shared_ptr< PrimitiveShape > m_shape;
 	size_t m_subset;
 	float m_lowerBound;
 	float m_upperBound;
-	MiscLib::RefCountPtr< MiscLib::RefCounted< std::vector< size_t > > > m_indices;
+	std::shared_ptr<std::vector< size_t > > m_indices;
 	size_t m_level;
 	bool m_hasConnectedComponent;
 	size_t m_score;
@@ -110,13 +110,13 @@ bool Candidate::operator>=(const Candidate &c) const
 
 void Candidate::Clone(Candidate *c) const
 {
-	c->m_shape = m_shape->Clone();
-	c->m_shape->Release();
+	c->m_shape.reset(m_shape->Clone());
+	//c->m_shape->Release();
 	c->m_subset = m_subset;
 	c->m_lowerBound = m_lowerBound;
 	c->m_upperBound = m_upperBound;
-	c->m_indices = new MiscLib::RefCounted< std::vector< size_t > >(*m_indices);
-	c->m_indices->Release();
+	c->m_indices.reset(new std::vector< size_t >(*m_indices));
+	//c->m_indices->Release();
 	c->m_level = m_level;
 	c->m_hasConnectedComponent = m_hasConnectedComponent;
 	c->m_score = m_score;
@@ -196,7 +196,7 @@ bool Candidate::ImproveBounds(const std::vector< ImmediateOctreeType * > &octree
 		m_hasConnectedComponent = true;
 		m_score = m_shape->ConnectedComponent(pc,
 			(4 << ((octrees.size() - m_subset) / 2)) * bitmapEpsilon,
-			m_indices, false);
+			m_indices.get(), false);
 		m_indices->resize(m_score);
 		if(m_subset >= octrees.size())
 		{

@@ -16,13 +16,13 @@ class ScorePrimitiveShapeVisitorImpl
 public:
 	typedef PointCompT PointCompatibilityFunc;
 	typedef OctreeT OctreeType;
-	typedef MiscLib::RefCounted< std::vector< size_t > > IndicesType;
+	typedef std::shared_ptr<std::vector< size_t >> IndicesType;
 	ScorePrimitiveShapeVisitorImpl(float distThresh,
 		float normalThresh) : m_pointComp(distThresh, normalThresh) {}
 	void SetOctree(const OctreeT &oct) { m_oct = &oct; }
 	const OctreeT &GetOctree() const { return *m_oct; }
-	IndicesType *GetIndices() { return m_indices; }
-	void SetIndices(IndicesType *indices) { m_indices = indices; }
+	IndicesType GetIndices() { return m_indices; }
+	void SetIndices(IndicesType indices) { m_indices = indices; }
 	void SetShapeIndex(const std::vector< int > &shapeIndex)
 	{ m_shapeIndex = &shapeIndex; }
 	const std::vector< int > &GetShapeIndex() { return *m_shapeIndex; }
@@ -51,7 +51,7 @@ public:
 private:
 	PointCompatibilityFunc m_pointComp;
 	const OctreeT *m_oct;
-	/*MiscLib::RefCountPtr<*/ IndicesType /*>*/ *m_indices;
+	IndicesType m_indices;
 	const std::vector< int > *m_shapeIndex;
 	//size_t m_upperBound;
 	//size_t m_sampled;

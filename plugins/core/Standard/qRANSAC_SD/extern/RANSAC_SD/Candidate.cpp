@@ -88,7 +88,7 @@ float Candidate::WeightedScore(const PointCloud &pc, float epsilon,
 
 void Candidate::ConnectedComponent(const PointCloud &pc, float bitmapEpsilon, float* borderRatio )
 {
-	size_t connectedSize = m_shape->ConnectedComponent(pc, bitmapEpsilon, m_indices, true, borderRatio);
+	size_t connectedSize = m_shape->ConnectedComponent(pc, bitmapEpsilon, m_indices.get(), true, borderRatio);
 	m_indices->resize(connectedSize);
 	m_lowerBound = m_upperBound = (float)m_indices->size();
 }
@@ -178,7 +178,7 @@ void Candidate::GetScore( const PointCloud& pc, float bitmapEpsilon, bool doFilt
 void Candidate::GetScoreMaxCCSize( const PointCloud& pc, float bitmapEpsilon, bool doFiltering )
 {
 	size_t connectedSize = m_shape->ConnectedComponent(pc, bitmapEpsilon, 
-					m_indices, doFiltering );
+					m_indices.get(), doFiltering );
 	m_indices->resize(connectedSize);
 
 	m_score = connectedSize;
@@ -188,7 +188,7 @@ void Candidate::GetScoreMaxCCMinBorder( const PointCloud& pc, float bitmapEpsilo
 {
 	float borderRatio;
 	size_t connectedSize = m_shape->ConnectedComponent(pc, bitmapEpsilon, 
-					m_indices, doFiltering, &borderRatio);
+					m_indices.get(), doFiltering, &borderRatio);
 	m_indices->resize(connectedSize);
 
 	m_score = connectedSize * size_t(( 1.0f - borderRatio ) * ( 1.0f - GetVariance( pc )));

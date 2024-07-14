@@ -152,13 +152,13 @@ void RansacShapeDetector::GenerateCandidates(
 			}
 			if(!verified)
 			{
-				shape->Release();
+				//shape->Release();
 				continue;
 			}
 			Candidate cand(shape, node->Level());
-			cand.Indices(new MiscLib::RefCounted< std::vector< size_t > >);
-			cand.Indices()->Release();
-			shape->Release();
+			cand.Indices(new std::vector< size_t >);
+			//cand.Indices()->Release();
+			//shape->Release();
 			cand.ImproveBounds(octrees, pc, scoreVisitorCopy,
 				currentSize, m_options.m_bitmapEpsilon, 1);
 			if(cand.UpperBound() < m_options.m_minSupport)
@@ -453,7 +453,7 @@ bool RansacShapeDetector::FindBestCandidate(CandidatesType &candidates,
 
 size_t
 RansacShapeDetector::Detect(PointCloud &pc, size_t beginIdx, size_t endIdx,
-	std::vector< std::pair< RefCountPtr< PrimitiveShape >, size_t > > *shapes)
+	std::vector< std::pair<std::shared_ptr< PrimitiveShape >, size_t > > *shapes)
 {
 	size_t pcSize = endIdx - beginIdx;
 	/*
@@ -634,8 +634,8 @@ RansacShapeDetector::Detect(PointCloud &pc, size_t beginIdx, size_t endIdx,
 					oldScore = newScore;
 					oldSize = newSize;
 					std::pair< size_t, float > score;
-					PrimitiveShape* shape;
-					shape = Fit(allowDifferentShapes, *clone.Shape(),
+					std::shared_ptr<PrimitiveShape> shape;
+					shape= Fit(allowDifferentShapes, *clone.Shape(),
 						pc, clone.Indices()->begin(), clone.Indices()->end(),
 						&score);
 					if (shape)
@@ -650,11 +650,11 @@ RansacShapeDetector::Detect(PointCloud &pc, size_t beginIdx, size_t endIdx,
 								pc, 3 * m_options.m_epsilon, m_options.m_normalThresh,
 								m_options.m_bitmapEpsilon);
 							newSize = clone.Size();
-							shape->Release();
+							//shape->Release();
 							if (newScore > oldScore && newSize > m_options.m_minSupport)
 								clone.Clone(&candidates.back());
 						}
-						clone2.Shape()->Release();
+						//clone2.Shape()->Release();
 					}
 					//allowDifferentShapes = false;
 				}
@@ -669,7 +669,7 @@ RansacShapeDetector::Detect(PointCloud &pc, size_t beginIdx, size_t endIdx,
 				std::cout << "ERROR: candidate size == 0 after fitting" << std::endl;
 			// best candidate is ok!
 			// remove the points
-			shapes->push_back(std::make_pair(RefCountPtr< PrimitiveShape >(candidates.back().Shape()),
+			shapes->push_back(std::make_pair(std::shared_ptr<PrimitiveShape>(candidates.back().Shape()),
 				candidates.back().Indices()->size()));
 			for(size_t i = 0; i < candidates.back().Indices()->size(); ++i)
 				shapeIndex[(*(candidates.back().Indices()))[i]] = static_cast<int>(numShapes);
@@ -959,7 +959,7 @@ bool RansacShapeDetector::DrawSamplesStratified(const IndexedOctreeType &oct,
 	return false;
 }
 
-PrimitiveShape *RansacShapeDetector::Fit(bool allowDifferentShapes,
+std::shared_ptr<PrimitiveShape> RansacShapeDetector::Fit(bool allowDifferentShapes,
 	const PrimitiveShape &initialShape, const PointCloud &pc,
 	std::vector< size_t >::const_iterator begin,
 	std::vector< size_t >::const_iterator end,
@@ -970,12 +970,12 @@ PrimitiveShape *RansacShapeDetector::Fit(bool allowDifferentShapes,
 		return NULL;
 	}
 
-	PrimitiveShape *bestShape = NULL;
-		bestShape = initialShape.LSFit(pc, m_options.m_epsilon,
-			m_options.m_normalThresh, begin, end, score);
+	std::shared_ptr<PrimitiveShape> bestShape(nullptr);
+		bestShape.reset(initialShape.LSFit(pc, m_options.m_epsilon,
+			m_options.m_normalThresh, begin, end, score));
 		if (bestShape && m_options.m_allowSimplification)
 		{
-			std::vector< MiscLib::RefCountPtr< PrimitiveShape > > suggestions;
+			std::vector< std::shared_ptr< PrimitiveShape > > suggestions;
 			PointCloud tmpPC;
 			bestShape->SuggestSimplifications(tmpPC, m_options.m_epsilon, &suggestions);
 			if (suggestions.size() > 0)
@@ -1004,15 +1004,15 @@ PrimitiveShape *RansacShapeDetector::Fit(bool allowDifferentShapes,
 								//}
 								if (verified)
 								{
-									bestShape->Release();
-									bestShape = suggestions[si]->Clone();
-									bestShape->AddRef();
+									//bestShape->Release();
+									bestShape.reset(suggestions[si]->Clone());
+									//bestShape->AddRef();
 								}
 								break;
 							}
 						}
 					}
-					suggestions[si]->Release();
+					//suggestions[si]->Release();
 				}
 			}
 		}

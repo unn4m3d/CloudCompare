@@ -172,7 +172,7 @@ void CylinderPrimitiveShape::Visit(PrimitiveShapeVisitor *visitor) const
 
 void CylinderPrimitiveShape::SuggestSimplifications(const PointCloud &pc,
 	float distThresh,
-	std::vector< MiscLib::RefCountPtr< PrimitiveShape > > *suggestions) const
+	std::vector< std::shared_ptr< PrimitiveShape > > *suggestions) const
 {
 	// sample the bounding box in parameter space at 25 locations
 	// these points are used to estimate the other shapes
@@ -220,8 +220,8 @@ void CylinderPrimitiveShape::SuggestSimplifications(const PointCloud &pc,
 			if (sum < bestSum)
 			{
 				bestSum = sum;
-				suggestions->push_back(new SpherePrimitiveShape(sphere));
-				suggestions->back()->Release();
+				suggestions->push_back(std::make_shared<SpherePrimitiveShape>(sphere));
+				//suggestions->back()->Release();
 			}
 		}
 	}
@@ -245,8 +245,8 @@ void CylinderPrimitiveShape::SuggestSimplifications(const PointCloud &pc,
 			if (sum < bestSum)
 			{
 				bestSum = sum;
-				suggestions->push_back(new PlanePrimitiveShape(plane));
-				suggestions->back()->Release();
+				suggestions->push_back(std::make_shared<PlanePrimitiveShape>(plane));
+				//suggestions->back()->Release();
 			}
 		}
 	}
